@@ -3,8 +3,36 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{9FE82260-2455-46A6-B2F2-ECCE5510DA66}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{8A550348-0C97-4EC5-B399-17949BB1BBA1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{B31F5C66-FAF0-4DCF-8D6B-4AD597660470}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgrc.Messages", "Tgrc.Messages\Tgrc.Messages.csproj", "{A7995885-0C4F-4848-A285-A883D5050FA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgrc.btr.Core", "Tgrc.btr.Core\Tgrc.btr.Core.csproj", "{02396C76-C842-4FEB-867F-4DDEC4A6DDB3}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A7995885-0C4F-4848-A285-A883D5050FA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7995885-0C4F-4848-A285-A883D5050FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7995885-0C4F-4848-A285-A883D5050FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7995885-0C4F-4848-A285-A883D5050FA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02396C76-C842-4FEB-867F-4DDEC4A6DDB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02396C76-C842-4FEB-867F-4DDEC4A6DDB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02396C76-C842-4FEB-867F-4DDEC4A6DDB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02396C76-C842-4FEB-867F-4DDEC4A6DDB3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A7995885-0C4F-4848-A285-A883D5050FA9} = {B31F5C66-FAF0-4DCF-8D6B-4AD597660470}
+		{02396C76-C842-4FEB-867F-4DDEC4A6DDB3} = {8A550348-0C97-4EC5-B399-17949BB1BBA1}
 	EndGlobalSection
 EndGlobal
