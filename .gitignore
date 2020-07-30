@@ -10,9 +10,10 @@
 */*.sdf
 */*.usertasks
 */*.cachefile
-*/[Bb]in/*
-*/[Oo]bj/*
-*/[Ll]ogs/*
-*/[Tt]emp/*
-*/[Tt]estResults/*
-*/[ii]pch/*
+
+code/**/[Bb]in/*
+code/**/[Oo]bj/*
+code/**/[Ll]ogs/*
+code/**/[Tt]emp/*
+code/**/[Tt]estResults/*
+code/**/[ii]pch/*
