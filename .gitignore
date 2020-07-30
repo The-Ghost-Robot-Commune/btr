@@ -1,15 +1,15 @@
 
 
 # Visual Studio cache directory
-*/.vs/*
+code/**/.vs/*
 
 # Misc Visual Studio generated files/directories
-*/*.log_activity
-*/*.log_performance
-*/*.opensdf
-*/*.sdf
-*/*.usertasks
-*/*.cachefile
+code/**/*.log_activity
+code/**/*.log_performance
+code/**/*.opensdf
+code/**/*.sdf
+code/**/*.usertasks
+code/**/*.cachefile
 
 code/**/[Bb]in/*
 code/**/[Oo]bj/*
