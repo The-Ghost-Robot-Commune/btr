@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D30DCC7B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgrc.Messages.Test", "Tgrc.Messages.Test\Tgrc.Messages.Test.csproj", "{D10DDCA0-B737-4CBF-9C4F-236C93574431}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgrc.Plugins", "Tgrc.Plugins\Tgrc.Plugins.csproj", "{C41C780C-2C47-48F2-9350-60A4ABBEDDAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{D10DDCA0-B737-4CBF-9C4F-236C93574431}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D10DDCA0-B737-4CBF-9C4F-236C93574431}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D10DDCA0-B737-4CBF-9C4F-236C93574431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C41C780C-2C47-48F2-9350-60A4ABBEDDAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C41C780C-2C47-48F2-9350-60A4ABBEDDAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C41C780C-2C47-48F2-9350-60A4ABBEDDAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C41C780C-2C47-48F2-9350-60A4ABBEDDAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,5 +50,6 @@ Global
 		{02396C76-C842-4FEB-867F-4DDEC4A6DDB3} = {8A550348-0C97-4EC5-B399-17949BB1BBA1}
 		{D30DCC7B-10E7-4D40-9113-EB40387CB5AF} = {B31F5C66-FAF0-4DCF-8D6B-4AD597660470}
 		{D10DDCA0-B737-4CBF-9C4F-236C93574431} = {D30DCC7B-10E7-4D40-9113-EB40387CB5AF}
+		{C41C780C-2C47-48F2-9350-60A4ABBEDDAA} = {B31F5C66-FAF0-4DCF-8D6B-4AD597660470}
 	EndGlobalSection
 EndGlobal
