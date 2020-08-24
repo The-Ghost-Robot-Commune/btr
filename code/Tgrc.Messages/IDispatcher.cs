@@ -9,7 +9,7 @@ namespace Tgrc.Messages
 	public interface IDispatcher
 	{
 
-		
+		void Send(IMessage message);
 
 		/// <summary>
 		/// Sends all the messages that have arrived since the last dispatch

@@ -40,11 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContextFactory.cs" />
+    <Compile Include="IContext.cs" />
+    <Compile Include="IContextSetup.cs" />
     <Compile Include="IDispatcher.cs" />
     <Compile Include="IListener.cs" />
-    <Compile Include="IMessageProxy.cs" />
-    <Compile Include="IMessageType.cs" />
+    <Compile Include="IMessage.cs" />
     <Compile Include="IPayload.cs" />
+    <Compile Include="IPayloadId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

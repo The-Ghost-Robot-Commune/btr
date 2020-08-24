@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace Tgrc.Messages
 {
-	public interface IMessageProxy
+	public interface IContext
 	{
-		void Send(IMessageType type, IPayload payload);
+		string Id { get; }
+
+		
+		IPayloadId GetPayloadId(string payloadName);
+
+		string GetPayloadName(IPayloadId id);
+
+
+
 	}
 }

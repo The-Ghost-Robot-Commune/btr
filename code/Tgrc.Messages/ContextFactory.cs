@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Tgrc.Messages
 {
-	public interface IMessageType
+	public class ContextFactory
 	{
+		public IContextSetup Create(string contextName)
+		{
+
+		}
 	}
 }

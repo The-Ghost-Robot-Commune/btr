@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Tgrc.Messages
 {
-	/// <summary>
-	/// All implementations need to be serializable in some way
-	/// 
-	/// </summary>
-	public interface IPayload
+	public interface IMessage
 	{
-		IPayloadId Id { get; }
+
+		int PayloadCount { get;}
+
+		IEnumerable<IPayloadId> GetPayloadIds();
+
 
 	}
 }
