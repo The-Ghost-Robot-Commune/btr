@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Tgrc.Messages
 {
-	public interface IContextSetup : IDisposable
+	public interface IContextSetup
 	{
 		void RegisterAssemblies(IEnumerable<Assembly> assemblies);
 
-		IPayloadId RegisterPayload(string payloadName);
+		IPayloadComponentId RegisterPayloadComponent(string payloadComponentName);
 
-		IContext Finalize();
+		IContext EndSetup();
 	}
 }

@@ -11,9 +11,18 @@ namespace Tgrc.Messages
 		string Id { get; }
 
 		
-		IPayloadId GetPayloadId(string payloadName);
+		IPayloadComponentId GetPayloadId(string payloadName);
 
-		string GetPayloadName(IPayloadId id);
+		string GetPayloadName(IPayloadComponentId id);
+
+
+		IMessageProxy CreateProxy(string name);
+
+		IMessageProxy GetProxy(string name);
+
+		IDispatcher CreateDispatcher(string name);
+
+		IDispatcher GetDispatcher(string name);
 
 
 

@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 namespace Tgrc.Messages
 {
 	/// <summary>
-	/// All implementations need to be serializable in some way
+	/// All implementors must be serializable
 	/// 
 	/// </summary>
-	public interface IPayload
+	public interface IPayloadComponent
 	{
-		IPayloadId Id { get; }
-
 	}
 }

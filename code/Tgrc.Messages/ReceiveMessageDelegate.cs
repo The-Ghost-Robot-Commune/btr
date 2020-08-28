@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace Tgrc.Messages
 {
-	public interface IPayloadId : IEquatable<IPayloadId>
-	{
-		
-	}
+	public delegate void ReceiveMessageDelegate(IMessage message);
+	
 }

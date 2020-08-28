@@ -10,7 +10,19 @@ namespace Tgrc.Messages
 	{
 		public IContextSetup Create(string contextName)
 		{
+			return Create(contextName, typeof(DefaultContext));
+		}
 
+		public IContextSetup Create(string contextName, Type contextType)
+		{
+			if (typeof(DefaultContext) == contextType)
+			{
+				return new DefaultContext.Setup(contextName);
+			}
+			else
+			{
+				throw new ContextSetupException("Unsupported context type");
+			}
 		}
 	}
 }

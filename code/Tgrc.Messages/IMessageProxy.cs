@@ -6,16 +6,12 @@ using System.Threading.Tasks;
 
 namespace Tgrc.Messages
 {
-	public interface IDispatcher
+	public interface IMessageProxy
 	{
-
 		string Name { get; }
 
 		IContext Context { get; }
 
-		/// <summary>
-		/// Sends all the messages that have arrived since the last dispatch
-		/// </summary>
-		void DispatchMessages();
+		void Send(IMessage message);
 	}
 }

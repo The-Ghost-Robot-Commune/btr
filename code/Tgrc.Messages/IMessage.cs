@@ -11,8 +11,12 @@ namespace Tgrc.Messages
 
 		int PayloadCount { get;}
 
-		IEnumerable<IPayloadId> GetPayloadIds();
+		IEnumerable<IPayloadComponentId> GetPayloadComponents();
 
+		TPayload GetPayload<TPayload>(IPayloadComponentId id)
+			where TPayload : class, IPayloadComponent;
+
+		bool HavePayload(IPayloadComponentId id);
 
 	}
 }
