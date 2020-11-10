@@ -52,6 +52,7 @@
     <Compile Include="IMessageProxy.cs" />
     <Compile Include="IPayloadComponent.cs" />
     <Compile Include="IPayloadComponentId.cs" />
+    <Compile Include="PayloadComponentAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReceiveMessageDelegate.cs" />
   </ItemGroup>

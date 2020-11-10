@@ -53,16 +53,15 @@ namespace Tgrc.Messages
 				throw new NotImplementedException();
 			}
 
-			public void RegisterAssemblies(IEnumerable<Assembly> assemblies)
+			public void RegisterListener(Type listenerType)
 			{
 				throw new NotImplementedException();
 			}
-
-			public IPayloadComponentId RegisterPayloadComponent(string payloadComponentName)
+			
+			public IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType)
 			{
 				throw new NotImplementedException();
 			}
-
 		}
 	}
 }

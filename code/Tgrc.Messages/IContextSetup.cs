@@ -9,9 +9,10 @@ namespace Tgrc.Messages
 {
 	public interface IContextSetup
 	{
-		void RegisterAssemblies(IEnumerable<Assembly> assemblies);
+		
+		void RegisterListener(Type listenerType);
 
-		IPayloadComponentId RegisterPayloadComponent(string payloadComponentName);
+		IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType);
 
 		IContext EndSetup();
 	}
