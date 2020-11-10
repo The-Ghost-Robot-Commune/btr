@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgrc.Plugins", "Tgrc.Plugin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgrc.Messages.ConsoleTest", "Tgrc.Messages.ConsoleTest\Tgrc.Messages.ConsoleTest.csproj", "{FA211D00-DA1E-4BDA-8A47-392A86D9B1D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgrc.Log", "Tgrc.Log\Tgrc.Log.csproj", "{618C49B1-B1FB-4F90-83A2-584AB7F54616}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{FA211D00-DA1E-4BDA-8A47-392A86D9B1D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA211D00-DA1E-4BDA-8A47-392A86D9B1D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA211D00-DA1E-4BDA-8A47-392A86D9B1D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{618C49B1-B1FB-4F90-83A2-584AB7F54616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{618C49B1-B1FB-4F90-83A2-584AB7F54616}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{618C49B1-B1FB-4F90-83A2-584AB7F54616}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{618C49B1-B1FB-4F90-83A2-584AB7F54616}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,5 +64,6 @@ Global
 		{D10DDCA0-B737-4CBF-9C4F-236C93574431} = {D30DCC7B-10E7-4D40-9113-EB40387CB5AF}
 		{C41C780C-2C47-48F2-9350-60A4ABBEDDAA} = {B31F5C66-FAF0-4DCF-8D6B-4AD597660470}
 		{FA211D00-DA1E-4BDA-8A47-392A86D9B1D4} = {D30DCC7B-10E7-4D40-9113-EB40387CB5AF}
+		{618C49B1-B1FB-4F90-83A2-584AB7F54616} = {B31F5C66-FAF0-4DCF-8D6B-4AD597660470}
 	EndGlobalSection
 EndGlobal

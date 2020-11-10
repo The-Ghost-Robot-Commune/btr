@@ -13,7 +13,7 @@ namespace Tgrc.Messages.ConsoleTest
 		{
 
 			ContextFactory factory = new ContextFactory();
-			var contextSetup = factory.Create("TestContext");
+			var contextSetup = factory.Create("TestContext", null);
 
 			Assembly currentAssembly = Assembly.GetExecutingAssembly();
 			var payloads = ContextUtilities.FindPayloadComponents(currentAssembly);
@@ -21,6 +21,18 @@ namespace Tgrc.Messages.ConsoleTest
 			{
 				contextSetup.RegisterPayloadComponent(payload.Item1, payload.Item2);
 			}
+
+			contextSetup.RegisterPayloadComponent(nameof(PayloadB), typeof(PayloadB));
+
+			
+
+
+			IContext context = contextSetup.EndSetup();
+
+
+
+			ListenerA listener = new ListenerA();
+			
 		}
 	}
 }

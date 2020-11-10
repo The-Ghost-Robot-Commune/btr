@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FA211D00-DA1E-4BDA-8A47-392A86D9B1D4}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{618C49B1-B1FB-4F90-83A2-584AB7F54616}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tgrc.Messages.ConsoleTest</RootNamespace>
-    <AssemblyName>Tgrc.Messages.ConsoleTest</AssemblyName>
+    <RootNamespace>Tgrc.Log</RootNamespace>
+    <AssemblyName>Tgrc.Log</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -42,24 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ListenerA.cs" />
-    <Compile Include="PayloadA.cs" />
-    <Compile Include="PayloadB.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Tgrc.Log\Tgrc.Log.csproj">
-      <Project>{618c49b1-b1fb-4f90-83a2-584ab7f54616}</Project>
-      <Name>Tgrc.Log</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tgrc.Messages\Tgrc.Messages.csproj">
-      <Project>{a7995885-0c4f-4848-a285-a883d5050fa9}</Project>
-      <Name>Tgrc.Messages</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

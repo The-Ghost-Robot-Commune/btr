@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Tgrc.Log;
 
 namespace Tgrc.Messages
 {
@@ -26,7 +27,17 @@ namespace Tgrc.Messages
 			throw new NotImplementedException();
 		}
 
+		public IEnumerable<Type> GetListenerTypes()
+		{
+			throw new NotImplementedException();
+		}
+
 		public IPayloadComponentId GetPayloadId(string payloadName)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IEnumerable<IPayloadComponentId> GetPayloadIds()
 		{
 			throw new NotImplementedException();
 		}
@@ -43,22 +54,31 @@ namespace Tgrc.Messages
 
 		public class Setup : IContextSetup
 		{
-			public Setup(string contextName)
+			private readonly List<MethodInfo> listenerMethods;
+			private readonly List<Tuple<string, Type>> payloads;
+
+			public Setup(string contextName, ILogger logger)
+			{
+				listenerMethods = new List<MethodInfo>();
+				payloads = new List<Tuple<string, Type>>();
+			}
+
+
+			public void RegisterListener(MethodInfo method)
+			{
+				// TODO do some validation here for better exceptions
+
+				listenerMethods.Add(method);
+			}
+
+			public IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType)
 			{
 
+				payloads.Add(new Tuple<string, Type>(payloadComponentName, componentType));
+				throw new NotImplementedException();
 			}
 
 			public IContext EndSetup()
-			{
-				throw new NotImplementedException();
-			}
-
-			public void RegisterListener(Type listenerType)
-			{
-				throw new NotImplementedException();
-			}
-			
-			public IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType)
 			{
 				throw new NotImplementedException();
 			}

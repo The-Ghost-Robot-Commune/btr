@@ -19,6 +19,18 @@ namespace Tgrc.Messages
 
 		string GetPayloadName(IPayloadComponentId id);
 
+		/// <summary>
+		/// Intended for debugging. Can be slow
+		/// </summary>
+		/// <returns></returns>
+		IEnumerable<IPayloadComponentId> GetPayloadIds();
+
+		/// <summary>
+		/// Intended for debugging. Can be slow
+		/// </summary>
+		/// <returns></returns>
+		IEnumerable<Type> GetListenerTypes();
+
 
 		IMessageProxy CreateProxy(string name);
 
