@@ -8,7 +8,7 @@ namespace Tgrc.Messages
 {
 	/// <summary>
 	/// 
-	/// Payloads are registered too a specific context, and can only be used within it. They can only be registred during setup in order to allow for pre-processing.
+	/// Payloads and listener types are registered too a specific context, and can only be used within it. They can only be registred during setup in order to allow for pre-processing.
 	/// </summary>
 	public interface IContext
 	{

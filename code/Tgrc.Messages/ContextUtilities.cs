@@ -12,7 +12,7 @@ namespace Tgrc.Messages
 
 		private static readonly Func<Type, PayloadComponentAttribute, bool> alwaysInclude = (t, a) => true;
 
-		public static IEnumerable<Tuple<Type, string>> FindPayloadComponents(Assembly assembly)
+		public static IEnumerable<Tuple<string, Type>> FindPayloadComponents(Assembly assembly)
 		{
 			return FindPayloadComponents(assembly, alwaysInclude);
 		}
@@ -22,7 +22,7 @@ namespace Tgrc.Messages
 		/// </summary>
 		/// <param name="assembly"></param>
 		/// <returns></returns>
-		public static IEnumerable<Tuple<Type, string>> FindPayloadComponents(Assembly assembly, Func<Type, PayloadComponentAttribute, bool> includePayload)
+		public static IEnumerable<Tuple<string, Type>> FindPayloadComponents(Assembly assembly, Func<Type, PayloadComponentAttribute, bool> includePayload)
 		{
 			var types = assembly.GetTypes();
 			Type interfaceType = typeof(IPayloadComponent);
@@ -34,7 +34,7 @@ namespace Tgrc.Messages
 					{
 						if (includePayload(t, componentAttribute))
 						{
-							yield return new Tuple<Type, string>(t, componentAttribute.Name);
+							yield return new Tuple<string, Type>(componentAttribute.Name, t);
 						}
 					}
 				}
