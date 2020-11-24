@@ -10,6 +10,7 @@ namespace Tgrc.Messages
 {
 	class DefaultContext : IContext
 	{
+		
 		public string Id { get; private set; }
 
 		public IDispatcher CreateDispatcher(string name)
@@ -32,7 +33,7 @@ namespace Tgrc.Messages
 			throw new NotImplementedException();
 		}
 
-		public IPayloadComponentId GetPayloadId(string payloadName)
+		public IPayloadComponentId FindPayloadId(string payloadName)
 		{
 			throw new NotImplementedException();
 		}
@@ -50,6 +51,47 @@ namespace Tgrc.Messages
 		public IMessageProxy GetProxy(string name)
 		{
 			throw new NotImplementedException();
+		}
+
+		private DefaultContext(IEnumerable<MethodInfo> methods, List<Tuple<string, Type>> payloads)
+		{
+
+		}
+
+		private class PayloadId : IPayloadComponentId
+		{
+			public PayloadId(int id)
+			{
+				this.Id = id;
+			}
+
+			public int Id { get; set; }
+
+			public bool Equals(IPayloadComponentId other)
+			{
+				return Id == ((PayloadId)other).Id;
+			}
+
+			public override bool Equals(object obj)
+			{
+				return obj is PayloadId && Equals((PayloadId)obj);
+			}
+
+			public override int GetHashCode()
+			{
+				return Id;
+			}
+
+			public override string ToString()
+			{
+				return Id.ToString();
+			}
+		}
+
+
+		private class Payload
+		{
+
 		}
 
 		public class Setup : IContextSetup
@@ -73,14 +115,14 @@ namespace Tgrc.Messages
 
 			public IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType)
 			{
-
 				payloads.Add(new Tuple<string, Type>(payloadComponentName, componentType));
-				throw new NotImplementedException();
+
+				return new PayloadId(payloads.Count - 1);
 			}
 
 			public IContext EndSetup()
 			{
-				throw new NotImplementedException();
+				return new DefaultContext(listenerMethods, payloads);
 			}
 		}
 	}

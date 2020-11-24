@@ -15,7 +15,7 @@ namespace Tgrc.Messages
 		string Id { get; }
 
 		
-		IPayloadComponentId GetPayloadId(string payloadName);
+		IPayloadComponentId FindPayloadId(string payloadName);
 
 		string GetPayloadName(IPayloadComponentId id);
 

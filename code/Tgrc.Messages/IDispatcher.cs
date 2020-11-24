@@ -13,6 +13,8 @@ namespace Tgrc.Messages
 
 		IContext Context { get; }
 
+		void RegisterListener(IListener listener, params IPayloadComponentId[] payloads);
+
 		/// <summary>
 		/// Sends all the messages that have arrived since the last dispatch
 		/// </summary>

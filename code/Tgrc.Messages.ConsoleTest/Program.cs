@@ -24,7 +24,11 @@ namespace Tgrc.Messages.ConsoleTest
 
 			contextSetup.RegisterPayloadComponent(nameof(PayloadB), typeof(PayloadB));
 
-			
+			var methods = ContextUtilities.FindListenerMethods(currentAssembly);
+			foreach (var method in methods)
+			{
+				contextSetup.RegisterListener(method);
+			}
 
 
 			IContext context = contextSetup.EndSetup();
