@@ -10,7 +10,7 @@ namespace Tgrc.Messages
 	/// 
 	/// Payloads and listener types are registered too a specific context, and can only be used within it. They can only be registred during setup in order to allow for pre-processing.
 	/// </summary>
-	public interface IContext : IDispatcher, IMessageProxy
+	public interface IContext : IDispatcher
 	{
 		string Id { get; }
 

@@ -23,22 +23,37 @@ namespace Tgrc.Messages
 			throw new NotImplementedException();
 		}
 
-		public IPayloadComponentId FindPayloadId(string payloadName)
-		{
-			throw new NotImplementedException();
-		}
-
 		public IEnumerable<IPayloadComponentId> GetPayloadIds()
 		{
 			throw new NotImplementedException();
 		}
 
+		public IPayloadComponentId FindPayloadId(string payloadName)
+		{
+			throw new NotImplementedException();
+		}
+		
 		public string GetPayloadName(IPayloadComponentId id)
 		{
 			throw new NotImplementedException();
 		}
 
 		public void RegisterListener(IListener listener, params IPayloadComponentId[] payloads)
+		{
+			throw new NotImplementedException();
+		}
+		
+		public void RegisterListener(IEnumerable<IListener> listeners, params IPayloadComponentId[] payloads)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RegisterListenerForAll(IListener listener)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RegisterListenerForAll(IEnumerable<IListener> listeners)
 		{
 			throw new NotImplementedException();
 		}
@@ -52,7 +67,7 @@ namespace Tgrc.Messages
 		{
 			throw new NotImplementedException();
 		}
-		
+
 		private class PayloadId : IPayloadComponentId
 		{
 			public PayloadId(int id)

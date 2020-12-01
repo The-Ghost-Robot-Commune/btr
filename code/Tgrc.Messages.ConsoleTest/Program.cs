@@ -15,14 +15,17 @@ namespace Tgrc.Messages.ConsoleTest
 			ContextFactory factory = new ContextFactory();
 			var contextSetup = factory.Create("TestContext", null);
 
+			List<IPayloadComponentId> payloadIds = new List<IPayloadComponentId>();
+
 			Assembly currentAssembly = Assembly.GetExecutingAssembly();
 			var payloads = ContextUtilities.FindPayloadComponents(currentAssembly);
 			foreach (var payload in payloads)
 			{
-				contextSetup.RegisterPayloadComponent(payload.Item1, payload.Item2);
+				var id = contextSetup.RegisterPayloadComponent(payload.Item1, payload.Item2);
+				payloadIds.Add(id);
 			}
 
-			contextSetup.RegisterPayloadComponent(nameof(PayloadB), typeof(PayloadB));
+			payloadIds.Add(contextSetup.RegisterPayloadComponent(nameof(PayloadB), typeof(PayloadB)));
 
 			var methods = ContextUtilities.FindListenerMethods(currentAssembly);
 			foreach (var method in methods)
@@ -36,7 +39,7 @@ namespace Tgrc.Messages.ConsoleTest
 
 
 			ListenerA listener = new ListenerA();
-			
+
 		}
 	}
 }
