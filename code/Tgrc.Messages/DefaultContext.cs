@@ -13,21 +13,6 @@ namespace Tgrc.Messages
 		
 		public string Id { get; private set; }
 
-		public IDispatcher CreateDispatcher(string name)
-		{
-			throw new NotImplementedException();
-		}
-
-		public IMessageProxy CreateProxy(string name)
-		{
-			throw new NotImplementedException();
-		}
-
-		public IDispatcher GetDispatcher(string name)
-		{
-			throw new NotImplementedException();
-		}
-
 		public IEnumerable<Type> GetListenerTypes()
 		{
 			throw new NotImplementedException();
@@ -47,12 +32,7 @@ namespace Tgrc.Messages
 		{
 			throw new NotImplementedException();
 		}
-
-		public IMessageProxy GetProxy(string name)
-		{
-			throw new NotImplementedException();
-		}
-
+		
 		private DefaultContext(IEnumerable<MethodInfo> methods, List<Tuple<string, Type>> payloads)
 		{
 

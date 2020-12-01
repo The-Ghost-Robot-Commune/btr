@@ -8,11 +8,7 @@ namespace Tgrc.Messages
 {
 	public interface IDispatcher
 	{
-
-		string Name { get; }
-
-		IContext Context { get; }
-
+		
 		void RegisterListener(IListener listener, params IPayloadComponentId[] payloads);
 
 		/// <summary>

@@ -8,10 +8,6 @@ namespace Tgrc.Messages
 {
 	public interface IMessageProxy
 	{
-		string Name { get; }
-
-		IContext Context { get; }
-
 		void Send(IMessage message);
 	}
 }
