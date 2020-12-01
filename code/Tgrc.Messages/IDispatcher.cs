@@ -11,6 +11,8 @@ namespace Tgrc.Messages
 		
 		void RegisterListener(IListener listener, params IPayloadComponentId[] payloads);
 
+		void Send(IMessage message);
+
 		/// <summary>
 		/// Sends all the messages that have arrived since the last dispatch
 		/// </summary>

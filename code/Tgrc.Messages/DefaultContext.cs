@@ -13,6 +13,11 @@ namespace Tgrc.Messages
 		
 		public string Id { get; private set; }
 
+		private DefaultContext(IEnumerable<MethodInfo> methods, List<Tuple<string, Type>> payloads)
+		{
+
+		}
+
 		public IEnumerable<Type> GetListenerTypes()
 		{
 			throw new NotImplementedException();
@@ -32,12 +37,22 @@ namespace Tgrc.Messages
 		{
 			throw new NotImplementedException();
 		}
-		
-		private DefaultContext(IEnumerable<MethodInfo> methods, List<Tuple<string, Type>> payloads)
-		{
 
+		public void RegisterListener(IListener listener, params IPayloadComponentId[] payloads)
+		{
+			throw new NotImplementedException();
 		}
 
+		public void DispatchMessages()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Send(IMessage message)
+		{
+			throw new NotImplementedException();
+		}
+		
 		private class PayloadId : IPayloadComponentId
 		{
 			public PayloadId(int id)
