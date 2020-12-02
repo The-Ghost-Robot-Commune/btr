@@ -14,8 +14,6 @@ namespace Tgrc.Messages
 	public interface IContextSetup
 	{
 		
-		void RegisterListener(MethodInfo method);
-
 		IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType);
 
 		IContext EndSetup();

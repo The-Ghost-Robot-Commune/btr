@@ -9,10 +9,8 @@ namespace Tgrc.Messages
 {
 	public static class ContextUtilities
 	{
-		public delegate bool ListenerMethodFilter(Type listener, MethodInfo method, ListenerMethodAttribute methodAttribute);
 		public delegate bool PayloadFilter(Type payload, PayloadComponentAttribute payloadAttribute);
 
-		private static readonly ListenerMethodFilter alwaysIncludeMethod = (l, m, a) => true;
 		private static readonly PayloadFilter alwaysIncludePayload = (t, a) => true;
 
 		public static IEnumerable<Tuple<string, Type>> FindPayloadComponents(Assembly assembly)
@@ -43,33 +41,6 @@ namespace Tgrc.Messages
 				}
 			}
 		}
-
-
-		public static IEnumerable<MethodInfo> FindListenerMethods(Assembly assembly)
-		{
-			return FindListenerMethods(assembly, alwaysIncludeMethod);
-		}
-
-		public static IEnumerable<MethodInfo> FindListenerMethods(Assembly assembly, ListenerMethodFilter includeMethod)
-		{
-			Type interfaceType = typeof(IListener);
-			foreach (var t in assembly.GetTypes())
-			{
-				if (t.IsClass && t.IsAssignableFrom(interfaceType))
-				{
-					// The type is a IListener implementor, now check the methods
-					foreach (var method in t.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public))
-					{
-						// Check for the existance of the attribute and the optional filter
-						var customAttribute = method.GetCustomAttribute<ListenerMethodAttribute>();
-						if (customAttribute != null && includeMethod(t, method, customAttribute))
-						{
-							yield return method;
-						}
-					}
-				}
-			}
-		}
-
+		
 	}
 }

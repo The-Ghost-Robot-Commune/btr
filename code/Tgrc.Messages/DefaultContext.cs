@@ -13,7 +13,7 @@ namespace Tgrc.Messages
 		
 		public string Id { get; private set; }
 
-		private DefaultContext(IEnumerable<MethodInfo> methods, List<Tuple<string, Type>> payloads)
+		private DefaultContext(List<Tuple<string, Type>> payloads)
 		{
 
 		}
@@ -121,23 +121,13 @@ namespace Tgrc.Messages
 
 		public class Setup : IContextSetup
 		{
-			private readonly List<MethodInfo> listenerMethods;
 			private readonly List<Tuple<string, Type>> payloads;
 
 			public Setup(string contextName, ILogger logger)
 			{
-				listenerMethods = new List<MethodInfo>();
 				payloads = new List<Tuple<string, Type>>();
 			}
-
-
-			public void RegisterListener(MethodInfo method)
-			{
-				// TODO do some validation here for better exceptions
-
-				listenerMethods.Add(method);
-			}
-
+			
 			public IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType)
 			{
 				payloads.Add(new Tuple<string, Type>(payloadComponentName, componentType));
@@ -147,7 +137,7 @@ namespace Tgrc.Messages
 
 			public IContext EndSetup()
 			{
-				return new DefaultContext(listenerMethods, payloads);
+				return new DefaultContext(payloads);
 			}
 		}
 	}
