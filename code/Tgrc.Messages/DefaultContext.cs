@@ -94,12 +94,12 @@ namespace Tgrc.Messages
 
 			public bool Equals(IPayloadComponentId other)
 			{
-				return Id == ((PayloadId)other).Id;
+				return Id == other.Id;
 			}
 
 			public override bool Equals(object obj)
 			{
-				return obj is PayloadId && Equals((PayloadId)obj);
+				return obj is IPayloadComponentId && Equals((IPayloadComponentId)obj);
 			}
 
 			public override int GetHashCode()
