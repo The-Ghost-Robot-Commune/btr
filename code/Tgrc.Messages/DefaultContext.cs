@@ -40,12 +40,25 @@ namespace Tgrc.Messages
 
 		public void RegisterListener(IListener listener, params IPayloadComponentId[] payloads)
 		{
-			throw new NotImplementedException();
+			RegisterListener(listener, (IEnumerable<IPayloadComponentId>)payloads);
 		}
 		
 		public void RegisterListener(IEnumerable<IListener> listeners, params IPayloadComponentId[] payloads)
 		{
+			RegisterListener(listeners, (IEnumerable<IPayloadComponentId>)payloads);
+		}
+
+		public void RegisterListener(IListener listener, IEnumerable<IPayloadComponentId> payloads)
+		{
 			throw new NotImplementedException();
+		}
+
+		public void RegisterListener(IEnumerable<IListener> listeners, IEnumerable<IPayloadComponentId> payloads)
+		{
+			foreach (var l in listeners)
+			{
+				RegisterListener(l, payloads);
+			}
 		}
 
 		public void RegisterListenerForAll(IListener listener)
@@ -68,6 +81,8 @@ namespace Tgrc.Messages
 			throw new NotImplementedException();
 		}
 
+		
+
 		private class PayloadId : IPayloadComponentId
 		{
 			public PayloadId(int id)
@@ -75,7 +90,7 @@ namespace Tgrc.Messages
 				this.Id = id;
 			}
 
-			public int Id { get; set; }
+			public int Id { get; private set; }
 
 			public bool Equals(IPayloadComponentId other)
 			{

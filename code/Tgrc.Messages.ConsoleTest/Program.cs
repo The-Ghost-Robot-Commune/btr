@@ -40,6 +40,8 @@ namespace Tgrc.Messages.ConsoleTest
 
 			ListenerA listener = new ListenerA();
 
+			context.RegisterListener(listener, payloadIds[0]);
+
 		}
 	}
 }

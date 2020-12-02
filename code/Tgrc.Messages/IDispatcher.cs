@@ -15,8 +15,10 @@ namespace Tgrc.Messages
 		/// <param name="listener"></param>
 		/// <param name="payloads"></param>
 		void RegisterListener(IListener listener, params IPayloadComponentId[] payloads);
+		void RegisterListener(IListener listener, IEnumerable<IPayloadComponentId> payloads);
 
 		void RegisterListener(IEnumerable<IListener> listeners, params IPayloadComponentId[] payloads);
+		void RegisterListener(IEnumerable<IListener> listeners, IEnumerable<IPayloadComponentId> payloads);
 
 		/// <summary>
 		/// Registers a listener for *all* payloads
