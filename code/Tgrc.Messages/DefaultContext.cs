@@ -11,6 +11,8 @@ namespace Tgrc.Messages
 	class DefaultContext : IContext
 	{
 		
+
+
 		public string Id { get; private set; }
 
 		private DefaultContext(List<Tuple<string, Type>> payloads)
@@ -49,6 +51,18 @@ namespace Tgrc.Messages
 		}
 
 		public void RegisterListener(IListener listener, IEnumerable<IPayloadComponentId> payloads)
+		{
+			foreach (var p in payloads)
+			{
+				DistributionList list = FindOrCreateList(p);
+				list.AddListener(listener);
+			}
+
+
+			
+		}
+
+		private DistributionList FindOrCreateList(IPayloadComponentId p)
 		{
 			throw new NotImplementedException();
 		}
@@ -116,6 +130,22 @@ namespace Tgrc.Messages
 
 		private class Payload
 		{
+
+		}
+
+		private class DistributionList
+		{
+			public DistributionList()
+			{
+
+			}
+
+			public IPayloadComponentId Payload { get; private set; }
+			
+			public void AddListener(IListener listener)
+			{
+
+			}
 
 		}
 
