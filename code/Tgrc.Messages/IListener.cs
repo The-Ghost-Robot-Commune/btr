@@ -8,5 +8,6 @@ namespace Tgrc.Messages
 {
 	public interface IListener
 	{
+		void HandleMessage(IMessage message);
 	}
 }

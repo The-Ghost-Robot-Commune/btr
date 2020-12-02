@@ -11,6 +11,8 @@ namespace Tgrc.Messages
 
 		/// <summary>
 		/// Registers a listener for messages containing the specified payloads.
+		/// 
+		/// A listener will get each message only once, even if the message is made up of multiple payloads that the listener is interested in.
 		/// </summary>
 		/// <param name="listener"></param>
 		/// <param name="payloads"></param>

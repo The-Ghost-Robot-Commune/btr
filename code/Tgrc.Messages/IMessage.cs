@@ -13,6 +13,12 @@ namespace Tgrc.Messages
 
 		IEnumerable<IPayloadComponentId> GetPayloadComponents();
 
+		/// <summary>
+		/// Get's the payload of the specific "type", or null if none exist.
+		/// </summary>
+		/// <typeparam name="TPayload"></typeparam>
+		/// <param name="id"></param>
+		/// <returns></returns>
 		TPayload GetPayload<TPayload>(IPayloadComponentId id)
 			where TPayload : class, IPayloadComponent;
 

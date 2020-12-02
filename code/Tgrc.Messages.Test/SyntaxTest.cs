@@ -12,12 +12,5 @@ namespace Tgrc.Messages.Test
 		}
 
 
-
-		class Listener : IListener
-		{
-
-		}
-
-
 	}
 }

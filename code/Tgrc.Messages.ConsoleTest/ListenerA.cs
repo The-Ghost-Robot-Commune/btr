@@ -8,5 +8,9 @@ namespace Tgrc.Messages.ConsoleTest
 {
 	class ListenerA : IListener
 	{
+		public void HandleMessage(IMessage message)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
