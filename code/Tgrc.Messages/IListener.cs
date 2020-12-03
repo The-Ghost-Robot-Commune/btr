@@ -8,6 +8,6 @@ namespace Tgrc.Messages
 {
 	public interface IListener
 	{
-		void HandleMessage(IMessage message);
+		void HandleMessage(IContext sender, IMessage message);
 	}
 }

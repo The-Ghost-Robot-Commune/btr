@@ -10,14 +10,32 @@ namespace Tgrc.Messages
 {
 	class DefaultContext : IContext
 	{
-		
 
+		private readonly DistributionList[] distributionLists;
+		private Dictionary<string, PayloadDefinition> payloadDefinitions;
 
 		public string Id { get; private set; }
 
-		private DefaultContext(List<Tuple<string, Type>> payloads)
+		private DefaultContext(List<PayloadDefinition> payloads)
 		{
+			distributionLists = new DistributionList[payloads.Count];
+			payloadDefinitions = new Dictionary<string, PayloadDefinition>(StringComparer.InvariantCulture);
+			for (int i = 0; i < payloads.Count; i++)
+			{
+				var definition = payloads[i];
 
+				if (definition.Id.Id != i)
+				{
+					throw new ContextSetupException(string.Format("Missmatch between payload id's. Definition '{0}' Index {1}", definition, i));
+				}
+				if (payloadDefinitions.ContainsKey(definition.Name))
+				{
+					throw new ContextSetupException(string.Format("Duplicate payload names '{0}'", definition.Name));
+				}
+
+				distributionLists[i] = new DistributionList(definition.Id);
+				payloadDefinitions.Add(definition.Name, definition);
+			}
 		}
 
 		public IEnumerable<Type> GetListenerTypes()
@@ -34,7 +52,7 @@ namespace Tgrc.Messages
 		{
 			throw new NotImplementedException();
 		}
-		
+
 		public string GetPayloadName(IPayloadComponentId id)
 		{
 			throw new NotImplementedException();
@@ -44,7 +62,7 @@ namespace Tgrc.Messages
 		{
 			RegisterListener(listener, (IEnumerable<IPayloadComponentId>)payloads);
 		}
-		
+
 		public void RegisterListener(IEnumerable<IListener> listeners, params IPayloadComponentId[] payloads)
 		{
 			RegisterListener(listeners, (IEnumerable<IPayloadComponentId>)payloads);
@@ -57,14 +75,11 @@ namespace Tgrc.Messages
 				DistributionList list = FindOrCreateList(p);
 				list.AddListener(listener);
 			}
-
-
-			
 		}
 
-		private DistributionList FindOrCreateList(IPayloadComponentId p)
+		private DistributionList FindOrCreateList(IPayloadComponentId payload)
 		{
-			throw new NotImplementedException();
+			return distributionLists[payload.Id];
 		}
 
 		public void RegisterListener(IEnumerable<IListener> listeners, IEnumerable<IPayloadComponentId> payloads)
@@ -95,7 +110,7 @@ namespace Tgrc.Messages
 			throw new NotImplementedException();
 		}
 
-		
+
 
 		private class PayloadId : IPayloadComponentId
 		{
@@ -128,41 +143,68 @@ namespace Tgrc.Messages
 		}
 
 
-		private class Payload
+		private class PayloadDefinition
 		{
+			public PayloadDefinition(string name, Type type, IPayloadComponentId id)
+			{
+				this.Name = name;
+				this.Type = type;
+				this.Id = id;
+			}
 
+			public string Name { get; private set; }
+			public Type Type { get; private set; }
+			public IPayloadComponentId Id { get; private set; }
+
+			public override string ToString()
+			{
+				return string.Format("Name: {0} Type: {1} Id: {2}", Name, Type.FullName, Id.Id);
+			}
 		}
 
 		private class DistributionList
 		{
-			public DistributionList()
-			{
+			private HashSet<IListener> listeners;
 
+			public DistributionList(IPayloadComponentId payload)
+			{
+				this.Payload = payload;
+				listeners = new HashSet<IListener>(InstanceEqualityComparer<IListener>.Instance);
 			}
 
 			public IPayloadComponentId Payload { get; private set; }
-			
+
 			public void AddListener(IListener listener)
 			{
+				listeners.Add(listener);
+			}
 
+			public void Invoke(IContext context, IMessage message)
+			{
+				// TODO catch exceptions for each listener
+				foreach (var l in listeners)
+				{
+					l.HandleMessage(context, message);
+				}
 			}
 
 		}
 
 		public class Setup : IContextSetup
 		{
-			private readonly List<Tuple<string, Type>> payloads;
+			private readonly List<PayloadDefinition> payloads;
 
 			public Setup(string contextName, ILogger logger)
 			{
-				payloads = new List<Tuple<string, Type>>();
+				payloads = new List<PayloadDefinition>();
 			}
-			
+
 			public IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType)
 			{
-				payloads.Add(new Tuple<string, Type>(payloadComponentName, componentType));
+				IPayloadComponentId id = new PayloadId(payloads.Count);
+				payloads.Add(new PayloadDefinition(payloadComponentName, componentType, id));
 
-				return new PayloadId(payloads.Count - 1);
+				return id;
 			}
 
 			public IContext EndSetup()
