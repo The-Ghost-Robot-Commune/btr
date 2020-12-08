@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Tgrc.Messages
 {
-	class InstanceEqualityComparer<TClass> : IEqualityComparer<TClass>
+	class ReferenceEqualityComparer<TClass> : IEqualityComparer<TClass>
 		where TClass : class
 	{
-		public static readonly InstanceEqualityComparer<TClass> Instance = new InstanceEqualityComparer<TClass>();
+		public static readonly ReferenceEqualityComparer<TClass> Instance = new ReferenceEqualityComparer<TClass>();
 
-		private InstanceEqualityComparer()
+		private ReferenceEqualityComparer()
 		{
 
 		}

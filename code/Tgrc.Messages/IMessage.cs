@@ -11,7 +11,7 @@ namespace Tgrc.Messages
 
 		int PayloadCount { get;}
 
-		IEnumerable<IPayloadComponentId> GetPayloadComponents();
+		IEnumerable<IPayloadComponentId> GetPayloadComponentIds();
 
 		/// <summary>
 		/// Get's the payload of the specific "type", or null if none exist.

@@ -51,7 +51,7 @@ namespace Tgrc.Messages
 			messageBufferIndex = 0;
 		}
 
-		
+
 		public IPayloadComponentId FindPayloadId(string payloadName)
 		{
 			throw new NotImplementedException();
@@ -157,13 +157,22 @@ namespace Tgrc.Messages
 
 			var messages = CurrentBuffer;
 			messageBufferIndex = (messageBufferIndex == 0 ? 1 : 0);
+			HashSet<IListener> usedListeners = new HashSet<IListener>(ReferenceEqualityComparer<IListener>.Instance);
 
 			foreach (var m in messages)
 			{
+				usedListeners.Clear();
 
+				foreach (var pid in m.GetPayloadComponentIds())
+				{
+					var list = distributionLists[pid.Id];
+
+					list.Invoke(this, m, usedListeners);
+				}
 			}
 
 			messages.Clear();
+			// Check if we have gotten more messages as a result of the current dispatch batch
 			return CurrentBuffer.Count > 0;
 		}
 
@@ -239,7 +248,7 @@ namespace Tgrc.Messages
 			public DistributionList(IPayloadComponentId payload)
 			{
 				this.Payload = payload;
-				listeners = new HashSet<IListener>(InstanceEqualityComparer<IListener>.Instance);
+				listeners = new HashSet<IListener>(ReferenceEqualityComparer<IListener>.Instance);
 			}
 
 			public IPayloadComponentId Payload { get; private set; }
@@ -254,12 +263,15 @@ namespace Tgrc.Messages
 				listeners.Remove(listener);
 			}
 
-			public void Invoke(IContext context, IMessage message)
+			public void Invoke(IContext context, IMessage message, HashSet<IListener> usedListeners)
 			{
 				// TODO catch exceptions for each listener
 				foreach (var l in listeners)
 				{
-					l.HandleMessage(context, message);
+					if (usedListeners.Add(l))
+					{
+						l.HandleMessage(context, message); 
+					}
 				}
 			}
 
