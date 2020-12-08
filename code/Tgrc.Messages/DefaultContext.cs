@@ -15,6 +15,11 @@ namespace Tgrc.Messages
 		private readonly Dictionary<string, PayloadDefinition> payloadDefinitions;
 		private readonly Dictionary<IListener, HashSet<IPayloadComponentId>> listenerBookkeeping;
 
+		private int messageBufferIndex;
+		private readonly IList<IMessage>[] messageBuffer;
+
+		private IList<IMessage> CurrentBuffer { get { return messageBuffer[messageBufferIndex]; } }
+
 		public string Id { get; private set; }
 
 		private DefaultContext(List<PayloadDefinition> payloads)
@@ -39,6 +44,11 @@ namespace Tgrc.Messages
 			}
 
 			listenerBookkeeping = new Dictionary<IListener, HashSet<IPayloadComponentId>>();
+
+			messageBuffer = new IList<IMessage>[2];
+			messageBuffer[0] = new List<IMessage>();
+			messageBuffer[1] = new List<IMessage>();
+			messageBufferIndex = 0;
 		}
 
 		
@@ -141,14 +151,25 @@ namespace Tgrc.Messages
 			}
 		}
 
-		public void DispatchMessages()
+		public bool DispatchMessages()
 		{
-			throw new NotImplementedException();
+			// TODO Add more rigorous exception handling
+
+			var messages = CurrentBuffer;
+			messageBufferIndex = (messageBufferIndex == 0 ? 1 : 0);
+
+			foreach (var m in messages)
+			{
+
+			}
+
+			messages.Clear();
+			return CurrentBuffer.Count > 0;
 		}
 
 		public void Send(IMessage message)
 		{
-			throw new NotImplementedException();
+			CurrentBuffer.Add(message);
 		}
 
 		public IEnumerable<IListener> GetAllListeners()

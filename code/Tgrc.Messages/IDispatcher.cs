@@ -38,7 +38,10 @@ namespace Tgrc.Messages
 
 		/// <summary>
 		/// Sends all the messages that have arrived since the last dispatch
+		/// 
+		/// If timeout requirements allow, doing the dispatch again is recommended if the return value is true.
 		/// </summary>
-		void DispatchMessages();
+		/// <returns>returns true if there have arrived more messages as a result of the current dispatch. </returns>
+		bool DispatchMessages();
 	}
 }
