@@ -30,6 +30,9 @@ namespace Tgrc.Messages
 
 		void RegisterListenerForAll(IEnumerable<IListener> listeners);
 
+		void RemoveListener(IListener listener);
+		void RemoveListeners(IEnumerable<IListener> listeners);
+
 
 		void Send(IMessage message);
 

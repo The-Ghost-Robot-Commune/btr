@@ -12,7 +12,8 @@ namespace Tgrc.Messages
 	{
 
 		private readonly DistributionList[] distributionLists;
-		private Dictionary<string, PayloadDefinition> payloadDefinitions;
+		private readonly Dictionary<string, PayloadDefinition> payloadDefinitions;
+		private readonly Dictionary<IListener, HashSet<IPayloadComponentId>> listenerBookkeeping;
 
 		public string Id { get; private set; }
 
@@ -36,6 +37,8 @@ namespace Tgrc.Messages
 				distributionLists[i] = new DistributionList(definition.Id);
 				payloadDefinitions.Add(definition.Name, definition);
 			}
+
+			listenerBookkeeping = new Dictionary<IListener, HashSet<IPayloadComponentId>>();
 		}
 
 		public IEnumerable<Type> GetListenerTypes()
@@ -70,16 +73,33 @@ namespace Tgrc.Messages
 
 		public void RegisterListener(IListener listener, IEnumerable<IPayloadComponentId> payloads)
 		{
+			var bookkeeping = FindOrCreateBookkeeping(listener);
 			foreach (var p in payloads)
 			{
 				DistributionList list = FindOrCreateList(p);
 				list.AddListener(listener);
+
+				bookkeeping.Add(p);
 			}
 		}
 
 		private DistributionList FindOrCreateList(IPayloadComponentId payload)
 		{
 			return distributionLists[payload.Id];
+		}
+
+		private HashSet<IPayloadComponentId> FindOrCreateBookkeeping(IListener listener)
+		{
+			if (listenerBookkeeping.ContainsKey(listener))
+			{
+				return listenerBookkeeping[listener];
+			}
+			else
+			{
+				var set = new HashSet<IPayloadComponentId>();
+				listenerBookkeeping.Add(listener, set);
+				return set;
+			}
 		}
 
 		public void RegisterListener(IEnumerable<IListener> listeners, IEnumerable<IPayloadComponentId> payloads)
@@ -92,12 +112,42 @@ namespace Tgrc.Messages
 
 		public void RegisterListenerForAll(IListener listener)
 		{
-			throw new NotImplementedException();
+			var bookkeeping = FindOrCreateBookkeeping(listener);
+			foreach (var p in payloadDefinitions.Values)
+			{
+				var id = p.Id;
+				DistributionList list = FindOrCreateList(id);
+				list.AddListener(listener);
+
+				bookkeeping.Add(id);
+			}
 		}
 
 		public void RegisterListenerForAll(IEnumerable<IListener> listeners)
 		{
-			throw new NotImplementedException();
+			foreach (var l in listeners)
+			{
+				RegisterListenerForAll(l);
+			}
+		}
+
+		public void RemoveListener(IListener listener)
+		{
+			var usedIds = listenerBookkeeping[listener];
+			foreach (var id in usedIds)
+			{
+				DistributionList list = distributionLists[id.Id];
+				list.RemoveListener(listener);
+			}
+			listenerBookkeeping.Remove(listener);
+		}
+
+		public void RemoveListeners(IEnumerable<IListener> listeners)
+		{
+			foreach (var l in listeners)
+			{
+				RemoveListener(l);
+			}
 		}
 
 		public void DispatchMessages()
@@ -109,8 +159,6 @@ namespace Tgrc.Messages
 		{
 			throw new NotImplementedException();
 		}
-
-
 
 		private class PayloadId : IPayloadComponentId
 		{
@@ -164,7 +212,7 @@ namespace Tgrc.Messages
 
 		private class DistributionList
 		{
-			private HashSet<IListener> listeners;
+			private readonly HashSet<IListener> listeners;
 
 			public DistributionList(IPayloadComponentId payload)
 			{
@@ -177,6 +225,11 @@ namespace Tgrc.Messages
 			public void AddListener(IListener listener)
 			{
 				listeners.Add(listener);
+			}
+
+			public void RemoveListener(IListener listener)
+			{
+				listeners.Remove(listener);
 			}
 
 			public void Invoke(IContext context, IMessage message)
