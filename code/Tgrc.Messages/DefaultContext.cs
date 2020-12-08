@@ -41,16 +41,7 @@ namespace Tgrc.Messages
 			listenerBookkeeping = new Dictionary<IListener, HashSet<IPayloadComponentId>>();
 		}
 
-		public IEnumerable<Type> GetListenerTypes()
-		{
-			throw new NotImplementedException();
-		}
-
-		public IEnumerable<IPayloadComponentId> GetPayloadIds()
-		{
-			throw new NotImplementedException();
-		}
-
+		
 		public IPayloadComponentId FindPayloadId(string payloadName)
 		{
 			throw new NotImplementedException();
@@ -158,6 +149,16 @@ namespace Tgrc.Messages
 		public void Send(IMessage message)
 		{
 			throw new NotImplementedException();
+		}
+
+		public IEnumerable<IListener> GetAllListeners()
+		{
+			return listenerBookkeeping.Keys;
+		}
+
+		public IEnumerable<IPayloadComponentId> GetAllPayloadIds()
+		{
+			return payloadDefinitions.Values.Select(d => d.Id);
 		}
 
 		private class PayloadId : IPayloadComponentId

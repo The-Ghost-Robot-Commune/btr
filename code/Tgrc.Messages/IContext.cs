@@ -23,13 +23,13 @@ namespace Tgrc.Messages
 		/// Intended for debugging. Can be slow
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<IPayloadComponentId> GetPayloadIds();
+		IEnumerable<IPayloadComponentId> GetAllPayloadIds();
 
 		/// <summary>
 		/// Intended for debugging. Can be slow
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<Type> GetListenerTypes();
+		IEnumerable<IListener> GetAllListeners();
 		
 
 	}
