@@ -57,7 +57,17 @@ namespace Tgrc.Messages
 			throw new NotImplementedException();
 		}
 
+		public IPayloadComponentId FindPayloadId(Type payloadType)
+		{
+			throw new NotImplementedException();
+		}
+
 		public string GetPayloadName(IPayloadComponentId id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Type GetPayloadType(IPayloadComponentId id)
 		{
 			throw new NotImplementedException();
 		}
@@ -180,15 +190,20 @@ namespace Tgrc.Messages
 		{
 			CurrentBuffer.Add(message);
 		}
-
-		public IEnumerable<IListener> GetAllListeners()
-		{
-			return listenerBookkeeping.Keys;
-		}
-
+		
 		public IEnumerable<IPayloadComponentId> GetAllPayloadIds()
 		{
 			return payloadDefinitions.Values.Select(d => d.Id);
+		}
+
+		IEnumerable<Tuple<IPayloadComponentId, IEnumerable<IListener>>> IContext.GetAllListeners()
+		{
+			throw new NotImplementedException();
+		}
+
+		public IMessage Compose(IEnumerable<IPayloadComponent> payloads)
+		{
+			throw new NotImplementedException();
 		}
 
 		private class PayloadId : IPayloadComponentId
@@ -268,6 +283,7 @@ namespace Tgrc.Messages
 				// TODO catch exceptions for each listener
 				foreach (var l in listeners)
 				{
+					// Make sure each listener is only called once for each message
 					if (usedListeners.Add(l))
 					{
 						l.HandleMessage(context, message); 
