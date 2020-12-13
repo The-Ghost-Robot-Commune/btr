@@ -12,5 +12,6 @@ namespace Tgrc.Messages
 	/// </summary>
 	public interface IPayloadComponent
 	{
+		IPayloadComponentId Id { get; }
 	}
 }

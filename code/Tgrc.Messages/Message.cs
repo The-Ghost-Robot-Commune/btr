@@ -10,12 +10,12 @@ namespace Tgrc.Messages
 	{
 		private readonly Dictionary<IPayloadComponentId, IPayloadComponent> payloads;
 
-		public Message(IEnumerable<Tuple<IPayloadComponentId, IPayloadComponent>> payloads)
+		public Message(IEnumerable<IPayloadComponent> payloads)
 		{
-			this.payloads = new Dictionary<IPayloadComponentId, IPayloadComponent>();
+			this.payloads = new Dictionary<IPayloadComponentId, IPayloadComponent>(PayloadComponentIdComparer.Instance);
 			foreach (var p in payloads)
 			{
-				this.payloads.Add(p.Item1, p.Item2);
+				this.payloads.Add(p.Id, p);
 			}
 		}
 

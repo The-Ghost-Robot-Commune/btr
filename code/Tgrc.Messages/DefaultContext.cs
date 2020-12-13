@@ -107,7 +107,7 @@ namespace Tgrc.Messages
 			}
 			else
 			{
-				var set = new HashSet<IPayloadComponentId>();
+				var set = new HashSet<IPayloadComponentId>(PayloadComponentIdComparer.Instance);
 				listenerBookkeeping.Add(listener, set);
 				return set;
 			}
@@ -203,7 +203,7 @@ namespace Tgrc.Messages
 
 		public IMessage Compose(IEnumerable<IPayloadComponent> payloads)
 		{
-			throw new NotImplementedException();
+			return new Message(payloads);
 		}
 
 		private class PayloadId : IPayloadComponentId
