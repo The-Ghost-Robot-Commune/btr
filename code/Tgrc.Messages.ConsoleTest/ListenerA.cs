@@ -10,7 +10,7 @@ namespace Tgrc.Messages.ConsoleTest
 	{
 		public void HandleMessage(IContext sender, IMessage message)
 		{
-			throw new NotImplementedException();
+			
 		}
 	}
 }
