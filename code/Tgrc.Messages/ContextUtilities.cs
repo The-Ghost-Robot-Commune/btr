@@ -29,7 +29,7 @@ namespace Tgrc.Messages
 			Type interfaceType = typeof(IPayloadComponent);
 			foreach (var t in types)
 			{
-				if (t.IsAssignableFrom(interfaceType))
+				if (interfaceType.IsAssignableFrom(t))
 				{
 					foreach (var componentAttribute in t.GetCustomAttributes<PayloadComponentAttribute>())
 					{
