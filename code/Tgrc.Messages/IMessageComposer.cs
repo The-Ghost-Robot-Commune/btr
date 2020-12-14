@@ -8,6 +8,8 @@ namespace Tgrc.Messages
 {
 	public interface IMessageComposer
 	{
+		IMessage Compose(params IPayloadComponent[] payloads);
+
 		IMessage Compose(IEnumerable<IPayloadComponent> payloads);
 	}
 }

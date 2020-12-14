@@ -35,6 +35,7 @@ namespace Tgrc.Messages
 
 
 		void Send(IMessage message);
+		void Send(IEnumerable<IMessage> messages);
 
 		/// <summary>
 		/// Sends all the messages that have arrived since the last dispatch

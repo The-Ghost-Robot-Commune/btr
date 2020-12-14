@@ -16,9 +16,9 @@ namespace Tgrc.Messages
 		private readonly Dictionary<IListener, HashSet<IPayloadComponentId>> listenerBookkeeping;
 
 		private int messageBufferIndex;
-		private readonly IList<IMessage>[] messageBuffer;
+		private readonly List<IMessage>[] messageBuffer;
 
-		private IList<IMessage> CurrentBuffer { get { return messageBuffer[messageBufferIndex]; } }
+		private List<IMessage> CurrentBuffer { get { return messageBuffer[messageBufferIndex]; } }
 
 		public string Id { get; private set; }
 
@@ -45,7 +45,7 @@ namespace Tgrc.Messages
 
 			listenerBookkeeping = new Dictionary<IListener, HashSet<IPayloadComponentId>>();
 
-			messageBuffer = new IList<IMessage>[2];
+			messageBuffer = new List<IMessage>[2];
 			messageBuffer[0] = new List<IMessage>();
 			messageBuffer[1] = new List<IMessage>();
 			messageBufferIndex = 0;
@@ -186,6 +186,11 @@ namespace Tgrc.Messages
 			return CurrentBuffer.Count > 0;
 		}
 
+		public void Send(IEnumerable<IMessage> messages)
+		{
+			CurrentBuffer.AddRange(messages);
+		}
+
 		public void Send(IMessage message)
 		{
 			CurrentBuffer.Add(message);
@@ -199,6 +204,11 @@ namespace Tgrc.Messages
 		IEnumerable<Tuple<IPayloadComponentId, IEnumerable<IListener>>> IContext.GetAllListeners()
 		{
 			throw new NotImplementedException();
+		}
+
+		public IMessage Compose(params IPayloadComponent[] payloads)
+		{
+			return Compose((IEnumerable<IPayloadComponent>)payloads);
 		}
 
 		public IMessage Compose(IEnumerable<IPayloadComponent> payloads)

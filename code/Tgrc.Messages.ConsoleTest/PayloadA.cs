@@ -10,5 +10,13 @@ namespace Tgrc.Messages.ConsoleTest
 	[PayloadComponent(nameof(Tgrc.Messages.ConsoleTest.PayloadA) + ".Alt")]
 	class PayloadA : IPayloadComponent
 	{
+		private static IPayloadComponentId id;
+
+		public IPayloadComponentId Id { get { return id; } }
+
+		public static void SetId(IPayloadComponentId id)
+		{
+			PayloadA.id = id;
+		}
 	}
 }

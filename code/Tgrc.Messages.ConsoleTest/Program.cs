@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tgrc.Messages.ConsoleTest
 {
-	class Program
+	static class Program
 	{
 		static void Main(string[] args)
 		{
@@ -23,19 +23,33 @@ namespace Tgrc.Messages.ConsoleTest
 			{
 				var id = contextSetup.RegisterPayloadComponent(payload.Item1, payload.Item2);
 				payloadIds.Add(id);
+
+				if (payload.Item1 == nameof(PayloadA))
+				{
+					PayloadA.SetId(id);
+				}
 			}
 
-			payloadIds.Add(contextSetup.RegisterPayloadComponent(nameof(PayloadB), typeof(PayloadB)));
-			
+
+			var bId = contextSetup.RegisterPayloadComponent(nameof(PayloadB), typeof(PayloadB));
+			payloadIds.Add(bId);
+			PayloadB.SetId(bId);
 
 
 			IContext context = contextSetup.EndSetup();
 
-
-
 			ListenerA listener = new ListenerA();
 
-			context.RegisterListener(listener, payloadIds[0]);
+			context.RegisterListener(listener, payloadIds[0], bId);
+
+
+			PayloadA plA = new PayloadA();
+			PayloadB plB = new PayloadB();
+
+			var message = context.Compose(plA, plB);
+			context.Send(message);
+			context.DispatchMessages();
+
 
 		}
 	}

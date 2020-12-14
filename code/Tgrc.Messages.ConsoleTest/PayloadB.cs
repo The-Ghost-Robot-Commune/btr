@@ -8,5 +8,13 @@ namespace Tgrc.Messages.ConsoleTest
 {
 	class PayloadB : IPayloadComponent
 	{
+		private static IPayloadComponentId id;
+
+		public IPayloadComponentId Id { get { return id; } }
+
+		public static void SetId(IPayloadComponentId id)
+		{
+			PayloadB.id = id;
+		}
 	}
 }
