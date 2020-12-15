@@ -12,7 +12,7 @@ namespace Tgrc.Messages
 	{
 
 		private readonly DistributionList[] distributionLists;
-		private readonly Dictionary<string, PayloadDefinition> payloadDefinitions;
+		private readonly IReadOnlyDictionary<string, PayloadDefinition> payloadDefinitions;
 		private readonly Dictionary<IListener, HashSet<IPayloadComponentId>> listenerBookkeeping;
 
 		private int messageBufferIndex;
@@ -25,7 +25,7 @@ namespace Tgrc.Messages
 		private DefaultContext(List<PayloadDefinition> payloads)
 		{
 			distributionLists = new DistributionList[payloads.Count];
-			payloadDefinitions = new Dictionary<string, PayloadDefinition>(StringComparer.InvariantCulture);
+			var pd = new Dictionary<string, PayloadDefinition>(StringComparer.InvariantCulture);
 			for (int i = 0; i < payloads.Count; i++)
 			{
 				var definition = payloads[i];
@@ -34,14 +34,15 @@ namespace Tgrc.Messages
 				{
 					throw new ContextSetupException(string.Format("Missmatch between payload id's. Definition '{0}' Index {1}", definition, i));
 				}
-				if (payloadDefinitions.ContainsKey(definition.Name))
+				if (pd.ContainsKey(definition.Name))
 				{
 					throw new ContextSetupException(string.Format("Duplicate payload names '{0}'", definition.Name));
 				}
 
-				distributionLists[i] = new DistributionList(definition.Id);
-				payloadDefinitions.Add(definition.Name, definition);
+				distributionLists[i] = new DistributionList(definition);
+				pd.Add(definition.Name, definition);
 			}
+			payloadDefinitions = pd;
 
 			listenerBookkeeping = new Dictionary<IListener, HashSet<IPayloadComponentId>>();
 
@@ -54,14 +55,14 @@ namespace Tgrc.Messages
 
 		public IPayloadComponentId FindPayloadId(string payloadName)
 		{
-			throw new NotImplementedException();
+			PayloadDefinition result;
+			if (payloadDefinitions.TryGetValue(payloadName, out result))
+			{
+				return result.Id;
+			}
+			return null;
 		}
-
-		public IPayloadComponentId FindPayloadId(Type payloadType)
-		{
-			throw new NotImplementedException();
-		}
-
+		
 		public string GetPayloadName(IPayloadComponentId id)
 		{
 			throw new NotImplementedException();
@@ -270,13 +271,13 @@ namespace Tgrc.Messages
 		{
 			private readonly HashSet<IListener> listeners;
 
-			public DistributionList(IPayloadComponentId payload)
+			public DistributionList(PayloadDefinition payload)
 			{
 				this.Payload = payload;
 				listeners = new HashSet<IListener>(ReferenceEqualityComparer<IListener>.Instance);
 			}
 
-			public IPayloadComponentId Payload { get; private set; }
+			public PayloadDefinition Payload { get; private set; }
 
 			public void AddListener(IListener listener)
 			{
