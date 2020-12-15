@@ -1,0 +1,5 @@
+﻿
+
+Two instances of IContexts one server and one client. Probably no need for different implementations.
+Keep track of which messages are generated localy and which messages arrive from the other context. Forward only the local messages (avoids loops).
+
