@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -65,12 +66,12 @@ namespace Tgrc.Messages
 		
 		public string GetPayloadName(IPayloadComponentId id)
 		{
-			throw new NotImplementedException();
+			return distributionLists[id.Id].Payload.Name;
 		}
 
 		public Type GetPayloadType(IPayloadComponentId id)
 		{
-			throw new NotImplementedException();
+			return distributionLists[id.Id].Payload.Type;
 		}
 
 		public void RegisterListener(IListener listener, params IPayloadComponentId[] payloads)
@@ -88,18 +89,13 @@ namespace Tgrc.Messages
 			var bookkeeping = FindOrCreateBookkeeping(listener);
 			foreach (var p in payloads)
 			{
-				DistributionList list = FindOrCreateList(p);
+				DistributionList list = distributionLists[p.Id];
 				list.AddListener(listener);
 
 				bookkeeping.Add(p);
 			}
 		}
-
-		private DistributionList FindOrCreateList(IPayloadComponentId payload)
-		{
-			return distributionLists[payload.Id];
-		}
-
+		
 		private HashSet<IPayloadComponentId> FindOrCreateBookkeeping(IListener listener)
 		{
 			if (listenerBookkeeping.ContainsKey(listener))
@@ -128,7 +124,7 @@ namespace Tgrc.Messages
 			foreach (var p in payloadDefinitions.Values)
 			{
 				var id = p.Id;
-				DistributionList list = FindOrCreateList(id);
+				DistributionList list = distributionLists[id.Id];
 				list.AddListener(listener);
 
 				bookkeeping.Add(id);
@@ -204,7 +200,12 @@ namespace Tgrc.Messages
 
 		IEnumerable<Tuple<IPayloadComponentId, IEnumerable<IListener>>> IContext.GetAllListeners()
 		{
-			throw new NotImplementedException();
+			foreach (var distList in distributionLists)
+			{
+				var id = distList.Payload.Id;
+
+				yield return new Tuple<IPayloadComponentId, IEnumerable<IListener>>(id, distList);
+			}
 		}
 
 		public IMessage Compose(params IPayloadComponent[] payloads)
@@ -267,7 +268,7 @@ namespace Tgrc.Messages
 			}
 		}
 
-		private class DistributionList
+		private class DistributionList : IEnumerable<IListener>
 		{
 			private readonly HashSet<IListener> listeners;
 
@@ -302,6 +303,15 @@ namespace Tgrc.Messages
 				}
 			}
 
+			public IEnumerator<IListener> GetEnumerator()
+			{
+				return listeners.GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return GetEnumerator();
+			}
 		}
 
 		public class Setup : IContextSetup
