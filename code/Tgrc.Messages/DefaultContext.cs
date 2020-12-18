@@ -198,7 +198,7 @@ namespace Tgrc.Messages
 			return payloadDefinitions.Values.Select(d => d.Id);
 		}
 
-		IEnumerable<Tuple<IPayloadComponentId, IEnumerable<IListener>>> IContext.GetAllListeners()
+		public IEnumerable<Tuple<IPayloadComponentId, IEnumerable<IListener>>> GetAllListeners()
 		{
 			foreach (var distList in distributionLists)
 			{
