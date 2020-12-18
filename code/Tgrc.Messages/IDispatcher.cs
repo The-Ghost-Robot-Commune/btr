@@ -44,5 +44,14 @@ namespace Tgrc.Messages
 		/// </summary>
 		/// <returns>returns true if there have arrived more messages as a result of the current dispatch. </returns>
 		bool DispatchMessages();
+
+		
+
+		/// <summary>
+		/// *DEBUG*
+		/// Intended for debugging, might be very slow.
+		/// </summary>
+		/// <returns></returns>
+		IEnumerable<Tuple<IPayloadComponentId, IEnumerable<IListener>>> GetAllListeners();
 	}
 }

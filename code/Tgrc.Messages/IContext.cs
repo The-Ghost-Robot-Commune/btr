@@ -27,12 +27,5 @@ namespace Tgrc.Messages
 		IEnumerable<IPayloadComponentId> GetAllPayloadIds();
 
 		
-
-		/// <summary>
-		/// *DEBUG*
-		/// Intended for debugging, might be very slow.
-		/// </summary>
-		/// <returns></returns>
-		IEnumerable<Tuple<IPayloadComponentId, IEnumerable<IListener>>> GetAllListeners();
 	}
 }
