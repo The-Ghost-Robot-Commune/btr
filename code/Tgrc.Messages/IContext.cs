@@ -10,13 +10,15 @@ namespace Tgrc.Messages
 	/// 
 	/// Payloads and listener types are registered too a specific context, and can only be used within it. They can only be registred during setup in order to allow for pre-processing.
 	/// </summary>
-	public interface IContext : IDispatcher, IMessageComposer
+	public interface IContext
 	{
 		string Id { get; }
 
-		
+		IDispatcher Dispatcher { get; }
+		IMessageComposer MessageComposer { get; }
+
 		IPayloadComponentId FindPayloadId(string payloadName);
-		
+
 		string GetPayloadName(IPayloadComponentId id);
 		Type GetPayloadType(IPayloadComponentId id);
 
@@ -26,6 +28,6 @@ namespace Tgrc.Messages
 		/// <returns></returns>
 		IEnumerable<IPayloadComponentId> GetAllPayloadIds();
 
-		
+
 	}
 }

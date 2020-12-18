@@ -9,7 +9,7 @@ using Tgrc.Log;
 
 namespace Tgrc.Messages
 {
-	class DefaultContext : IContext
+	class DefaultContext : IContext, IDispatcher, IMessageComposer
 	{
 
 		private readonly DistributionList[] distributionLists;
@@ -22,6 +22,10 @@ namespace Tgrc.Messages
 		private List<IMessage> CurrentBuffer { get { return messageBuffer[messageBufferIndex]; } }
 
 		public string Id { get; private set; }
+
+		public IDispatcher Dispatcher { get { return this; } }
+
+		public IMessageComposer MessageComposer { get { return this; } }
 
 		private DefaultContext(List<PayloadDefinition> payloads)
 		{
@@ -63,7 +67,7 @@ namespace Tgrc.Messages
 			}
 			return null;
 		}
-		
+
 		public string GetPayloadName(IPayloadComponentId id)
 		{
 			return distributionLists[id.Id].Payload.Name;
@@ -95,7 +99,7 @@ namespace Tgrc.Messages
 				bookkeeping.Add(p);
 			}
 		}
-		
+
 		private HashSet<IPayloadComponentId> FindOrCreateBookkeeping(IListener listener)
 		{
 			if (listenerBookkeeping.ContainsKey(listener))
@@ -192,7 +196,7 @@ namespace Tgrc.Messages
 		{
 			CurrentBuffer.Add(message);
 		}
-		
+
 		public IEnumerable<IPayloadComponentId> GetAllPayloadIds()
 		{
 			return payloadDefinitions.Values.Select(d => d.Id);
@@ -298,7 +302,7 @@ namespace Tgrc.Messages
 					// Make sure each listener is only called once for each message
 					if (usedListeners.Add(l))
 					{
-						l.HandleMessage(context, message); 
+						l.HandleMessage(context, message);
 					}
 				}
 			}

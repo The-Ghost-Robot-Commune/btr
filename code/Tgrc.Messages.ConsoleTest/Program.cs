@@ -37,18 +37,20 @@ namespace Tgrc.Messages.ConsoleTest
 
 
 			IContext context = contextSetup.EndSetup();
+			IDispatcher dispatcher = context.Dispatcher;
+			IMessageComposer composer = context.MessageComposer;
 
 			ListenerA listener = new ListenerA();
 
-			context.RegisterListener(listener, payloadIds[0], bId);
+			dispatcher.RegisterListener(listener, payloadIds[0], bId);
 
 
 			PayloadA plA = new PayloadA();
 			PayloadB plB = new PayloadB();
 
-			var message = context.Compose(plA, plB);
-			context.Send(message);
-			context.DispatchMessages();
+			var message = composer.Compose(plA, plB);
+			dispatcher.Send(message);
+			dispatcher.DispatchMessages();
 
 
 		}
