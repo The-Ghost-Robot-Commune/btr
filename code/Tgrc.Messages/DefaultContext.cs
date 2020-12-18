@@ -9,7 +9,7 @@ using Tgrc.Log;
 
 namespace Tgrc.Messages
 {
-	class DefaultContext : IContext, IDispatcher, IMessageComposer
+	class DefaultContext : IContext, IDispatcher, IRemoteDispatcher, IMessageComposer
 	{
 
 		private readonly DistributionList[] distributionLists;
@@ -18,14 +18,20 @@ namespace Tgrc.Messages
 
 		private int messageBufferIndex;
 		private readonly List<IMessage>[] messageBuffer;
+		private int remoteMessageBufferIndex;
+		private readonly List<IMessage>[] remoteMessageBuffer;
 
 		private List<IMessage> CurrentBuffer { get { return messageBuffer[messageBufferIndex]; } }
+		private List<IMessage> RemoteMessageBuffer { get { return remoteMessageBuffer[remoteMessageBufferIndex]; } }
 
 		public string Id { get; private set; }
 
 		public IDispatcher Dispatcher { get { return this; } }
 
+		public IRemoteDispatcher RemoteDispatcher { get { return this; } }
+
 		public IMessageComposer MessageComposer { get { return this; } }
+
 
 		private DefaultContext(List<PayloadDefinition> payloads)
 		{
@@ -55,6 +61,11 @@ namespace Tgrc.Messages
 			messageBuffer[0] = new List<IMessage>();
 			messageBuffer[1] = new List<IMessage>();
 			messageBufferIndex = 0;
+
+			remoteMessageBuffer = new List<IMessage>[2];
+			remoteMessageBuffer[0] = new List<IMessage>();
+			remoteMessageBuffer[1] = new List<IMessage>();
+			remoteMessageBufferIndex = 0;
 		}
 
 
@@ -181,8 +192,26 @@ namespace Tgrc.Messages
 					list.Invoke(this, m, usedListeners);
 				}
 			}
-
 			messages.Clear();
+
+
+			var remoteMessages = RemoteMessageBuffer;
+			remoteMessageBufferIndex = (remoteMessageBufferIndex == 0 ? 1 : 0);
+			foreach (var m in remoteMessages)
+			{
+				// TODO add the RemoteDispatcher listener to the usedListeners colelction so it does not get a copy of the remote messages, 
+				// since those messages originated from that dispatcher in the first place
+				usedListeners.Clear();
+
+
+				foreach (var pid in m.GetPayloadComponentIds())
+				{
+					var list = distributionLists[pid.Id];
+					list.Invoke(this, m, usedListeners);
+				}
+			}
+			remoteMessages.Clear();
+
 			// Check if we have gotten more messages as a result of the current dispatch batch
 			return CurrentBuffer.Count > 0;
 		}
@@ -195,6 +224,16 @@ namespace Tgrc.Messages
 		public void Send(IMessage message)
 		{
 			CurrentBuffer.Add(message);
+		}
+
+		public void RemoteSend(IMessage message)
+		{
+			RemoteMessageBuffer.Add(message);
+		}
+
+		public void RemoteSend(IEnumerable<IMessage> messages)
+		{
+			RemoteMessageBuffer.AddRange(messages);
 		}
 
 		public IEnumerable<IPayloadComponentId> GetAllPayloadIds()
