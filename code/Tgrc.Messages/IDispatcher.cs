@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tgrc.Messages
 {
-	public interface IDispatcher
+	public interface IDispatcher : IDIspatcherDebug
 	{
 
 		/// <summary>
@@ -45,13 +45,7 @@ namespace Tgrc.Messages
 		/// <returns>returns true if there have arrived more messages as a result of the current dispatch. </returns>
 		bool DispatchMessages();
 
-		
 
-		/// <summary>
-		/// *DEBUG*
-		/// Intended for debugging, might be very slow.
-		/// </summary>
-		/// <returns></returns>
-		IEnumerable<Tuple<IPayloadComponentId, IEnumerable<IListener>>> GetAllListeners();
+
 	}
 }
