@@ -10,6 +10,7 @@ namespace Tgrc.Messages.ConsoleTest
 	{
 		public void HandleMessage(IContext sender, IMessage message)
 		{
+			Console.Out.WriteLine("Message {0} from {1}", message, sender);
 			
 		}
 	}
