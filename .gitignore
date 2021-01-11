@@ -3,6 +3,9 @@
 # Visual Studio cache directory
 code/**/.vs/*
 
+# VS C# project user settings
+code/**/*.csproj.user
+
 # Misc Visual Studio generated files/directories
 code/**/*.log_activity
 code/**/*.log_performance
