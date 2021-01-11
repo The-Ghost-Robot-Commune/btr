@@ -17,3 +17,9 @@ code/**/[Ll]ogs/*
 code/**/[Tt]emp/*
 code/**/[Tt]estResults/*
 code/**/[ii]pch/*
+
+code/Unity/**/[Tt]emp/*
+code/Unity/**/[Ll]ibrary/*
+code/Unity/**/[Bb]uild/*
+code/Unity/**/debug.log
+
