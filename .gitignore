@@ -1,4 +1,8 @@
 
+# Root folders used by the build server
+[Bb]uild/*
+[Ll]ogs/*
+
 
 # Visual Studio cache directory
 code/**/.vs/*
@@ -21,6 +25,7 @@ code/**/[Tt]emp/*
 code/**/[Tt]estResults/*
 code/**/[Ii]pch/*
 
+# Unity specific filters
 code/Unity/**/[Bb]in~/*
 code/Unity/**/[Oo]bj~/*
 code/Unity/**/[Tt]emp/*
@@ -30,5 +35,7 @@ code/Unity/**/Logs/*
 code/Unity/**/UserSettings/*
 code/Unity/**/debug.log
 
-[Bb]uild/*
-[Ll]ogs/*
+# Ignore our own built files as they will constantly change
+code/Unity/**/Tgrc.**.dll
+code/Unity/**/Tgrc.**.dll.meta
+
