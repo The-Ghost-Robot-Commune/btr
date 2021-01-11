@@ -7,7 +7,7 @@
     <ProjectGuid>{43BFFE25-425A-4B79-9B05-C44CD6393DEB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Unity.Editor</RootNamespace>
+    <RootNamespace>Tgrc.btr.Editor</RootNamespace>
     <AssemblyName>Unity.Editor</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

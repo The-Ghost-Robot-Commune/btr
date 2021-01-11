@@ -7,7 +7,7 @@
     <ProjectGuid>{D2CB8FB5-6299-4C83-847F-185F727E987D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Unity.Plugins.Editor</RootNamespace>
+    <RootNamespace>Tgrc.btr.Plugins.Editor</RootNamespace>
     <AssemblyName>Unity.Plugins.Editor</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

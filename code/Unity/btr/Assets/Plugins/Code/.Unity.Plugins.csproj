@@ -7,7 +7,7 @@
     <ProjectGuid>{C2B63361-2F86-4A1D-B155-CD0009452F3F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Unity.Plugins</RootNamespace>
+    <RootNamespace>Tgrc.btr.Plugins</RootNamespace>
     <AssemblyName>Unity.Plugins</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
