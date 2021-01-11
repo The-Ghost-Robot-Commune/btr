@@ -18,6 +18,8 @@ code/**/[Tt]emp/*
 code/**/[Tt]estResults/*
 code/**/[Ii]pch/*
 
+code/Unity/**/[Bb]in~/*
+code/Unity/**/[Oo]bj~/*
 code/Unity/**/[Tt]emp/*
 code/Unity/**/[Ll]ibrary/*
 code/Unity/**/[Bb]uild/*
