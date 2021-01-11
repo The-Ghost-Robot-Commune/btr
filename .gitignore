@@ -21,5 +21,7 @@ code/**/[ii]pch/*
 code/Unity/**/[Tt]emp/*
 code/Unity/**/[Ll]ibrary/*
 code/Unity/**/[Bb]uild/*
+code/Unity/**/Logs/*
+code/Unity/**/UserSettings/*
 code/Unity/**/debug.log
 
