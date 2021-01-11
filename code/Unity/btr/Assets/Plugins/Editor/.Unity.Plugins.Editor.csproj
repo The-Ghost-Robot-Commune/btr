@@ -276,6 +276,12 @@
     <Compile Include="PluginEditorPlaceholder.cs" />
     <Compile Include="Unity.Plugins.EditorProperties~\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Code\.Unity.Plugins.csproj">
+      <Project>{c2b63361-2f86-4a1d-b155-cd0009452f3f}</Project>
+      <Name>.Unity.Plugins</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
