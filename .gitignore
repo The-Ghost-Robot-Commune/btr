@@ -3,6 +3,8 @@
 [Bb]uild/*
 [Ll]ogs/*
 
+# NuGet packages
+packages/*
 
 # Visual Studio cache directory
 code/**/.vs/*
