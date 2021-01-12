@@ -301,11 +301,11 @@
       <HintPath Condition="Exists('C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.XRModule.dll')">C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.XRModule.dll</HintPath>
     </Reference>
     <Reference Include="ZeroFormatter, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\packages\ZeroFormatter.Unity.1.6.4\lib\net35-Unity Full v3.5\ZeroFormatter.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\packages\ZeroFormatter.Unity.1.6.4\lib\net35-Unity Full v3.5\ZeroFormatter.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ZeroFormatter.Interfaces, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\packages\ZeroFormatter.Interfaces.1.6.4\lib\net45\ZeroFormatter.Interfaces.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\packages\ZeroFormatter.Interfaces.1.6.4\lib\net45\ZeroFormatter.Interfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
