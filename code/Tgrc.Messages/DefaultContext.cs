@@ -357,10 +357,10 @@ namespace Tgrc.Messages
 				payloads = new List<PayloadDefinition>();
 			}
 
-			public IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType)
+			public IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType, Func<IPayloadComponent, byte[]> serializer, Func<byte[], IPayloadComponent> deserializer)
 			{
 				IPayloadComponentId id = new PayloadId(payloads.Count);
-				payloads.Add(new PayloadDefinition(payloadComponentName, componentType, id));
+				payloads.Add(new PayloadDefinition(payloadComponentName, componentType, id, serializer, deserializer));
 
 				return id;
 			}

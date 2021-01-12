@@ -14,7 +14,7 @@ namespace Tgrc.Messages
 	public interface IContextSetup
 	{
 		
-		IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType);
+		IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType, Func<IPayloadComponent, byte[]> serializer, Func<byte[], IPayloadComponent> deserializer);
 
 		IContext EndSetup();
 	}
