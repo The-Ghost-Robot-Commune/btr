@@ -72,7 +72,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReceiveMessageDelegate.cs" />
     <Compile Include="RemoteDispatcherProxy.cs" />
-    <Compile Include="ZeroFormatterSerializer.cs" />
+    <Compile Include="ZeroFormatterImpl.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tgrc.Log\Tgrc.Log.csproj">
