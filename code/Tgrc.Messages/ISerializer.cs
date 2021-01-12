@@ -8,5 +8,8 @@ namespace Tgrc.Messages
 {
 	public interface ISerializer
 	{
+		byte[] Serlialize(IMessage message);
+
+		IMessage Deserialize(byte[] data);
 	}
 }
