@@ -38,6 +38,23 @@ namespace Tgrc.Messages
 		void Send(IEnumerable<IMessage> messages);
 
 		/// <summary>
+		/// Send a message to all listeners as tho it is any other message. 
+		/// Intended for messages originating from a remote dispatcher in another process
+		/// </summary>
+		/// <param name="message"></param>
+		void ForwardSend(IMessage message);
+
+		void ForwardSend(IEnumerable<IMessage> messages);
+
+		/// <summary>
+		/// Makes sure that the specified listener don't get sent any forwarded messages. This is to prevent message loops between server-client/frontend-backend.
+		/// </summary>
+		/// <param name="listener"></param>
+		void AddToForwardIgnoreList(IListener listener);
+		void AddToForwardIgnoreList(IEnumerable<IListener> listeners);
+		
+
+		/// <summary>
 		/// Sends all the messages that have arrived since the last dispatch
 		/// 
 		/// If timeout requirements allow, doing the dispatch again is recommended if the return value is true.

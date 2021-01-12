@@ -15,7 +15,6 @@ namespace Tgrc.Messages
 		string Id { get; }
 
 		IDispatcher Dispatcher { get; }
-		IRemoteDispatcher RemoteDispatcher { get; }
 		IMessageComposer MessageComposer { get; }
 
 		IPayloadComponentId FindPayloadId(string payloadName);

@@ -9,26 +9,25 @@ using Tgrc.Log;
 
 namespace Tgrc.Messages
 {
-	class DefaultContext : IContext, IDispatcher, IRemoteDispatcher, IMessageComposer
+	class DefaultContext : IContext, IDispatcher, IMessageComposer
 	{
 
 		private readonly DistributionList[] distributionLists;
 		private readonly IReadOnlyDictionary<string, PayloadDefinition> payloadDefinitions;
 		private readonly Dictionary<IListener, HashSet<IPayloadComponentId>> listenerBookkeeping;
+		private readonly HashSet<IListener> ignoreForwardedMessages;
 
 		private int messageBufferIndex;
 		private readonly List<IMessage>[] messageBuffer;
-		private int remoteMessageBufferIndex;
-		private readonly List<IMessage>[] remoteMessageBuffer;
+		private int forwardedMessageBufferIndex;
+		private readonly List<IMessage>[] forwardedMessageBuffer;
 
 		private List<IMessage> CurrentBuffer { get { return messageBuffer[messageBufferIndex]; } }
-		private List<IMessage> RemoteMessageBuffer { get { return remoteMessageBuffer[remoteMessageBufferIndex]; } }
+		private List<IMessage> ForwardedMessageBuffer { get { return forwardedMessageBuffer[forwardedMessageBufferIndex]; } }
 
 		public string Id { get; private set; }
 
 		public IDispatcher Dispatcher { get { return this; } }
-
-		public IRemoteDispatcher RemoteDispatcher { get { return this; } }
 
 		public IMessageComposer MessageComposer { get { return this; } }
 
@@ -55,17 +54,19 @@ namespace Tgrc.Messages
 			}
 			payloadDefinitions = pd;
 
-			listenerBookkeeping = new Dictionary<IListener, HashSet<IPayloadComponentId>>();
+			listenerBookkeeping = new Dictionary<IListener, HashSet<IPayloadComponentId>>(ReferenceEqualityComparer<IListener>.Instance);
 
 			messageBuffer = new List<IMessage>[2];
 			messageBuffer[0] = new List<IMessage>();
 			messageBuffer[1] = new List<IMessage>();
 			messageBufferIndex = 0;
 
-			remoteMessageBuffer = new List<IMessage>[2];
-			remoteMessageBuffer[0] = new List<IMessage>();
-			remoteMessageBuffer[1] = new List<IMessage>();
-			remoteMessageBufferIndex = 0;
+			forwardedMessageBuffer = new List<IMessage>[2];
+			forwardedMessageBuffer[0] = new List<IMessage>();
+			forwardedMessageBuffer[1] = new List<IMessage>();
+			forwardedMessageBufferIndex = 0;
+
+			ignoreForwardedMessages = new HashSet<IListener>(ReferenceEqualityComparer<IListener>.Instance);
 		}
 
 
@@ -110,21 +111,7 @@ namespace Tgrc.Messages
 				bookkeeping.Add(p);
 			}
 		}
-
-		private HashSet<IPayloadComponentId> FindOrCreateBookkeeping(IListener listener)
-		{
-			if (listenerBookkeeping.ContainsKey(listener))
-			{
-				return listenerBookkeeping[listener];
-			}
-			else
-			{
-				var set = new HashSet<IPayloadComponentId>(PayloadComponentIdComparer.Instance);
-				listenerBookkeeping.Add(listener, set);
-				return set;
-			}
-		}
-
+		
 		public void RegisterListener(IEnumerable<IListener> listeners, IEnumerable<IPayloadComponentId> payloads)
 		{
 			foreach (var l in listeners)
@@ -151,6 +138,20 @@ namespace Tgrc.Messages
 			foreach (var l in listeners)
 			{
 				RegisterListenerForAll(l);
+			}
+		}
+
+		private HashSet<IPayloadComponentId> FindOrCreateBookkeeping(IListener listener)
+		{
+			if (listenerBookkeeping.ContainsKey(listener))
+			{
+				return listenerBookkeeping[listener];
+			}
+			else
+			{
+				var set = new HashSet<IPayloadComponentId>(PayloadComponentIdComparer.Instance);
+				listenerBookkeeping.Add(listener, set);
+				return set;
 			}
 		}
 
@@ -195,13 +196,12 @@ namespace Tgrc.Messages
 			messages.Clear();
 
 
-			var remoteMessages = RemoteMessageBuffer;
-			remoteMessageBufferIndex = (remoteMessageBufferIndex == 0 ? 1 : 0);
+			var remoteMessages = ForwardedMessageBuffer;
+			forwardedMessageBufferIndex = (forwardedMessageBufferIndex == 0 ? 1 : 0);
 			foreach (var m in remoteMessages)
 			{
-				// TODO add the RemoteDispatcher listener to the usedListeners colelction so it does not get a copy of the remote messages, 
-				// since those messages originated from that dispatcher in the first place
 				usedListeners.Clear();
+				usedListeners.UnionWith(ignoreForwardedMessages);
 
 
 				foreach (var pid in m.GetPayloadComponentIds())
@@ -226,14 +226,14 @@ namespace Tgrc.Messages
 			CurrentBuffer.Add(message);
 		}
 
-		public void RemoteSend(IMessage message)
+		public void ForwardSend(IMessage message)
 		{
-			RemoteMessageBuffer.Add(message);
+			ForwardedMessageBuffer.Add(message);
 		}
 
-		public void RemoteSend(IEnumerable<IMessage> messages)
+		public void ForwardSend(IEnumerable<IMessage> messages)
 		{
-			RemoteMessageBuffer.AddRange(messages);
+			ForwardedMessageBuffer.AddRange(messages);
 		}
 
 		public IEnumerable<IPayloadComponentId> GetAllPayloadIds()
@@ -259,6 +259,16 @@ namespace Tgrc.Messages
 		public IMessage Compose(IEnumerable<IPayloadComponent> payloads)
 		{
 			return new Message(payloads);
+		}
+
+		public void AddToForwardIgnoreList(IListener listener)
+		{
+			ignoreForwardedMessages.Add(listener);
+		}
+
+		public void AddToForwardIgnoreList(IEnumerable<IListener> listeners)
+		{
+			ignoreForwardedMessages.UnionWith(listeners);
 		}
 
 		private class PayloadId : IPayloadComponentId
