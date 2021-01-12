@@ -21,17 +21,18 @@ namespace Tgrc.Messages.ConsoleTest
 			var payloads = ContextUtilities.FindPayloadComponents(currentAssembly);
 			foreach (var payload in payloads)
 			{
-				var id = contextSetup.RegisterPayloadComponent(payload.Item1, payload.Item2);
+				var id = contextSetup.RegisterPayloadComponent(payload);
 				payloadIds.Add(id);
 
-				if (payload.Item1 == nameof(PayloadA))
+				if (payload.Name == nameof(PayloadA))
 				{
 					PayloadA.SetId(id);
 				}
 			}
 
 
-			var bId = contextSetup.RegisterPayloadComponent(nameof(PayloadB), typeof(PayloadB));
+			PayloadDefinition payloadBDefinition = new PayloadDefinition(nameof(PayloadB), typeof(PayloadB), ContextUtilities.FindSerializeMethod<PayloadB>(), ContextUtilities.FindDeserializeMethod<PayloadB>());
+			var bId = contextSetup.RegisterPayloadComponent(payloadBDefinition);
 			payloadIds.Add(bId);
 			PayloadB.SetId(bId);
 

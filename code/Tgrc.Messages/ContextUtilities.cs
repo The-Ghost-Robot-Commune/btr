@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using ZeroFormatter;
+using static Tgrc.Messages.PayloadDefinition;
 
 namespace Tgrc.Messages
 {
@@ -12,8 +14,10 @@ namespace Tgrc.Messages
 		public delegate bool PayloadFilter(Type payload, PayloadComponentAttribute payloadAttribute);
 
 		private static readonly PayloadFilter alwaysIncludePayload = (t, a) => true;
+		private static readonly Dictionary<Type, Serialize> serializeCache = new Dictionary<Type, Serialize>();
+		private static readonly Dictionary<Type, Deserialize> deserializeCache = new Dictionary<Type, Deserialize>();
 
-		public static IEnumerable<Tuple<string, Type>> FindPayloadComponents(Assembly assembly)
+		public static IEnumerable<PayloadDefinition> FindPayloadComponents(Assembly assembly)
 		{
 			return FindPayloadComponents(assembly, alwaysIncludePayload);
 		}
@@ -23,7 +27,7 @@ namespace Tgrc.Messages
 		/// </summary>
 		/// <param name="assembly"></param>
 		/// <returns></returns>
-		public static IEnumerable<Tuple<string, Type>> FindPayloadComponents(Assembly assembly, PayloadFilter includePayload)
+		public static IEnumerable<PayloadDefinition> FindPayloadComponents(Assembly assembly, PayloadFilter includePayload)
 		{
 			var types = assembly.GetTypes();
 			Type interfaceType = typeof(IPayloadComponent);
@@ -35,12 +39,63 @@ namespace Tgrc.Messages
 					{
 						if (includePayload(t, componentAttribute))
 						{
-							yield return new Tuple<string, Type>(componentAttribute.Name, t);
+							Serialize serialize = FindSerializeMethod(t);
+							Deserialize deserialize = FindDeserializeMethod(t);
+							yield return new PayloadDefinition(componentAttribute.Name, t, serialize, deserialize);
 						}
 					}
 				}
 			}
 		}
-		
+
+
+		public static Serialize FindSerializeMethod(Type payloadType)
+		{
+			Serialize value;
+			if (!serializeCache.TryGetValue(payloadType, out value))
+			{
+				MethodInfo findSerializeGeneric = typeof(ContextUtilities).GetMethod(nameof(FindSerializeMethod));
+				MethodInfo findSerializeFinal = findSerializeGeneric.MakeGenericMethod(payloadType);
+				value = (Serialize)findSerializeFinal.Invoke(null, null);
+			}
+			return value;
+		}
+
+		public static Serialize FindSerializeMethod<TPayload>()
+			where TPayload : class, IPayloadComponent
+		{
+			Serialize value;
+			if (!serializeCache.TryGetValue(typeof(TPayload), out value))
+			{
+				value = (p, s) => ZeroFormatterSerializer.Serialize(s, (TPayload)p);
+				serializeCache.Add(typeof(TPayload), value);
+			}
+			return value;
+		}
+
+		public static Deserialize FindDeserializeMethod(Type payloadType)
+		{
+			Deserialize value;
+			if (!deserializeCache.TryGetValue(payloadType, out value))
+			{
+				MethodInfo findDeserializeGeneric = typeof(ContextUtilities).GetMethod(nameof(FindDeserializeMethod));
+				MethodInfo findDeserializeFinal = findDeserializeGeneric.MakeGenericMethod(payloadType);
+				value = (Deserialize)findDeserializeFinal.Invoke(null, null);
+			}
+			return value;
+		}
+
+		public static Deserialize FindDeserializeMethod<TPayload>()
+			where TPayload : class, IPayloadComponent
+		{
+			Deserialize value;
+			if (!deserializeCache.TryGetValue(typeof(TPayload), out value))
+			{
+				value = (s) => ZeroFormatterSerializer.Deserialize<TPayload>(s);
+				deserializeCache.Add(typeof(TPayload), value);
+			}
+			return value;
+		}
+
 	}
 }

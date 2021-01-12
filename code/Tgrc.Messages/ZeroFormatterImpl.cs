@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +11,8 @@ namespace Tgrc.Messages
 {
 	class ZeroFormatterImpl : ISerializer
 	{
+		private const int intByteSize = 4;
+
 		private readonly PayloadDefinition[] payloadDefinitions;
 
 		public ZeroFormatterImpl(List<PayloadDefinition> payloadTypes, IMessageComposer composer)
@@ -24,29 +28,46 @@ namespace Tgrc.Messages
 
 		public IMessageComposer MessageComposer { get; private set; }
 
-		public IMessage Deserialize(byte[] data)
+		public IMessage Deserialize(MemoryStream stream)
 		{
-			throw new NotImplementedException();
+			byte[] intBuffer = new byte[intByteSize];
+			stream.Read(intBuffer, 0, intBuffer.Length);
+
+			int numberOfPayloads = BitConverter.ToInt32(intBuffer, 0);
+			List<IPayloadComponent> payloadComponents = new List<IPayloadComponent>(numberOfPayloads);
+			for (int i = 0; i < numberOfPayloads; i++)
+			{
+				stream.Read(intBuffer, 0, intBuffer.Length);
+				int payloadId = BitConverter.ToInt32(intBuffer, 0);
+
+				var deserializer = payloadDefinitions[payloadId].Deserializer;
+				IPayloadComponent component = deserializer(stream);
+				payloadComponents.Add(component);
+			}
+
+			return MessageComposer.Compose(payloadComponents);
 		}
 
-		public byte[] Serlialize(IMessage message)
+		public void Serialize(IMessage message, MemoryStream stream)
 		{
 			byte[] bytePayloadCount = BitConverter.GetBytes(message.PayloadCount);
-			List<byte> data = new List<byte>(bytePayloadCount.Length * (message.PayloadCount + 1));
-			data.AddRange(bytePayloadCount);
+
+			Debug.Assert(bytePayloadCount.Length == intByteSize);
+
+			stream.Write(bytePayloadCount, 0, bytePayloadCount.Length);
 
 			foreach (var payload in message.GetPayloadComponents())
 			{
-				var serializer = payloadDefinitions[payload.Id.Id].Serializer;
+				int payloadId = payload.Id.Id;
 
-				byte[] payloadIdentifier = BitConverter.GetBytes(payload.Id.Id);
-				byte[] payloadData = serializer(payload);
+				byte[] payloadIdentifier = BitConverter.GetBytes(payloadId);
+				Debug.Assert(payloadIdentifier.Length == intByteSize);
 
-				data.AddRange(payloadIdentifier);
-				data.AddRange(payloadData);
+				stream.Write(payloadIdentifier, 0, payloadIdentifier.Length);
+
+				var serializer = payloadDefinitions[payloadId].Serializer;
+				serializer(payload, stream);
 			}
-
-			
 		}
 	}
 }

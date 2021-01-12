@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,9 +46,9 @@ namespace Tgrc.Messages
 		public void HandleMessage(IContext sender, IMessage message)
 		{
 			// All messages are forwarded to the remote dispatcher
-
-			var data = Serializer.Serlialize(message);
-			RemoteCommunicator.Send(data);
+			MemoryStream stream = new MemoryStream();
+			Serializer.Serialize(message, stream);
+			RemoteCommunicator.Send(stream.ToArray());
 		}
 
 		/// <summary>
@@ -73,7 +74,8 @@ namespace Tgrc.Messages
 
 		private void ReceiveRemoteMessage(byte[] data)
 		{
-			IMessage message = Serializer.Deserialize(data);
+			MemoryStream stream = new MemoryStream(data);
+			IMessage message = Serializer.Deserialize(stream);
 
 			lock (messageBufferLock)
 			{

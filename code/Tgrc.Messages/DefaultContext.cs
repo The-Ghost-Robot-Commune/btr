@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,7 +14,7 @@ namespace Tgrc.Messages
 	{
 
 		private readonly DistributionList[] distributionLists;
-		private readonly IReadOnlyDictionary<string, PayloadDefinition> payloadDefinitions;
+		private readonly IReadOnlyDictionary<string, InternalPayloadDefinition> payloadDefinitions;
 		private readonly Dictionary<IListener, HashSet<IPayloadComponentId>> listenerBookkeeping;
 		private readonly HashSet<IListener> ignoreForwardedMessages;
 
@@ -32,10 +33,10 @@ namespace Tgrc.Messages
 		public IMessageComposer MessageComposer { get { return this; } }
 
 
-		private DefaultContext(List<PayloadDefinition> payloads)
+		private DefaultContext(List<InternalPayloadDefinition> payloads)
 		{
 			distributionLists = new DistributionList[payloads.Count];
-			var pd = new Dictionary<string, PayloadDefinition>(StringComparer.InvariantCulture);
+			var pd = new Dictionary<string, InternalPayloadDefinition>(StringComparer.InvariantCulture);
 			for (int i = 0; i < payloads.Count; i++)
 			{
 				var definition = payloads[i];
@@ -72,7 +73,7 @@ namespace Tgrc.Messages
 
 		public IPayloadComponentId FindPayloadId(string payloadName)
 		{
-			PayloadDefinition result;
+			InternalPayloadDefinition result;
 			if (payloadDefinitions.TryGetValue(payloadName, out result))
 			{
 				return result.Id;
@@ -306,13 +307,13 @@ namespace Tgrc.Messages
 		{
 			private readonly HashSet<IListener> listeners;
 
-			public DistributionList(PayloadDefinition payload)
+			public DistributionList(InternalPayloadDefinition payload)
 			{
 				this.Payload = payload;
 				listeners = new HashSet<IListener>(ReferenceEqualityComparer<IListener>.Instance);
 			}
 
-			public PayloadDefinition Payload { get; private set; }
+			public InternalPayloadDefinition Payload { get; private set; }
 
 			public void AddListener(IListener listener)
 			{
@@ -350,17 +351,17 @@ namespace Tgrc.Messages
 
 		public class Setup : IContextSetup
 		{
-			private readonly List<PayloadDefinition> payloads;
+			private readonly List<InternalPayloadDefinition> payloads;
 
 			public Setup(string contextName, ILogger logger)
 			{
-				payloads = new List<PayloadDefinition>();
+				payloads = new List<InternalPayloadDefinition>();
 			}
 
-			public IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType, Func<IPayloadComponent, byte[]> serializer, Func<byte[], IPayloadComponent> deserializer)
+			public IPayloadComponentId RegisterPayloadComponent(PayloadDefinition definition)
 			{
 				IPayloadComponentId id = new PayloadId(payloads.Count);
-				payloads.Add(new PayloadDefinition(payloadComponentName, componentType, id, serializer, deserializer));
+				payloads.Add(new InternalPayloadDefinition(definition, id));
 
 				return id;
 			}

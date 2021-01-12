@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,8 @@ namespace Tgrc.Messages
 {
 	public interface ISerializer
 	{
-		byte[] Serlialize(IMessage message);
+		void Serialize(IMessage message, MemoryStream stream);
 
-		IMessage Deserialize(byte[] data);
+		IMessage Deserialize(MemoryStream stream);
 	}
 }

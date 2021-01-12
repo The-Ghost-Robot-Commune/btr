@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,8 +14,8 @@ namespace Tgrc.Messages
 	/// </summary>
 	public interface IContextSetup
 	{
-		
-		IPayloadComponentId RegisterPayloadComponent(string payloadComponentName, Type componentType, Func<IPayloadComponent, byte[]> serializer, Func<byte[], IPayloadComponent> deserializer);
+
+		IPayloadComponentId RegisterPayloadComponent(PayloadDefinition definition);
 
 		IContext EndSetup();
 	}
