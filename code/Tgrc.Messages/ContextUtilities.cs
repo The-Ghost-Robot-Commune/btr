@@ -17,6 +17,8 @@ namespace Tgrc.Messages
 		private static readonly Dictionary<Type, Serialize> serializeCache = new Dictionary<Type, Serialize>();
 		private static readonly Dictionary<Type, Deserialize> deserializeCache = new Dictionary<Type, Deserialize>();
 
+		private static readonly Type[] emptyTypeList = new Type[0];
+
 		public static IEnumerable<PayloadDefinition> FindPayloadComponents(Assembly assembly)
 		{
 			return FindPayloadComponents(assembly, alwaysIncludePayload);
@@ -54,7 +56,7 @@ namespace Tgrc.Messages
 			Serialize value;
 			if (!serializeCache.TryGetValue(payloadType, out value))
 			{
-				MethodInfo findSerializeGeneric = typeof(ContextUtilities).GetMethod(nameof(FindSerializeMethod));
+				MethodInfo findSerializeGeneric = typeof(ContextUtilities).GetMethod(nameof(FindSerializeMethod), emptyTypeList);
 				MethodInfo findSerializeFinal = findSerializeGeneric.MakeGenericMethod(payloadType);
 				value = (Serialize)findSerializeFinal.Invoke(null, null);
 			}
@@ -78,7 +80,7 @@ namespace Tgrc.Messages
 			Deserialize value;
 			if (!deserializeCache.TryGetValue(payloadType, out value))
 			{
-				MethodInfo findDeserializeGeneric = typeof(ContextUtilities).GetMethod(nameof(FindDeserializeMethod));
+				MethodInfo findDeserializeGeneric = typeof(ContextUtilities).GetMethod(nameof(FindDeserializeMethod), emptyTypeList);
 				MethodInfo findDeserializeFinal = findDeserializeGeneric.MakeGenericMethod(payloadType);
 				value = (Deserialize)findDeserializeFinal.Invoke(null, null);
 			}

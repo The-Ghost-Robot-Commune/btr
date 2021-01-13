@@ -13,11 +13,11 @@ namespace Tgrc.Messages
 	{
 		private const int intByteSize = 4;
 
-		private readonly PayloadDefinition[] payloadDefinitions;
+		private readonly InternalPayloadDefinition[] payloadDefinitions;
 
-		public ZeroFormatterImpl(List<PayloadDefinition> payloadTypes, IMessageComposer composer)
+		public ZeroFormatterImpl(List<InternalPayloadDefinition> payloadTypes, IMessageComposer composer)
 		{
-			payloadDefinitions = new PayloadDefinition[payloadTypes.Count];
+			payloadDefinitions = new InternalPayloadDefinition[payloadTypes.Count];
 			for (int i = 0; i < payloadDefinitions.Length; i++)
 			{
 				payloadDefinitions[i] = payloadTypes[i];

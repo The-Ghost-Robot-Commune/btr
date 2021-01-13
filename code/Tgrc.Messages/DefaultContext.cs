@@ -23,15 +23,6 @@ namespace Tgrc.Messages
 		private int forwardedMessageBufferIndex;
 		private readonly List<IMessage>[] forwardedMessageBuffer;
 
-		private List<IMessage> CurrentBuffer { get { return messageBuffer[messageBufferIndex]; } }
-		private List<IMessage> ForwardedMessageBuffer { get { return forwardedMessageBuffer[forwardedMessageBufferIndex]; } }
-
-		public string Id { get; private set; }
-
-		public IDispatcher Dispatcher { get { return this; } }
-
-		public IMessageComposer MessageComposer { get { return this; } }
-
 
 		private DefaultContext(List<InternalPayloadDefinition> payloads)
 		{
@@ -68,7 +59,21 @@ namespace Tgrc.Messages
 			forwardedMessageBufferIndex = 0;
 
 			ignoreForwardedMessages = new HashSet<IListener>(ReferenceEqualityComparer<IListener>.Instance);
+
+			this.Serializer = new ZeroFormatterImpl(payloads, this);
 		}
+
+		private List<IMessage> CurrentBuffer { get { return messageBuffer[messageBufferIndex]; } }
+		private List<IMessage> ForwardedMessageBuffer { get { return forwardedMessageBuffer[forwardedMessageBufferIndex]; } }
+
+
+		public string Id { get; private set; }
+
+		public IDispatcher Dispatcher { get { return this; } }
+
+		public IMessageComposer MessageComposer { get { return this; } }
+
+		public ISerializer Serializer { get; private set; }
 
 
 		public IPayloadComponentId FindPayloadId(string payloadName)
@@ -112,7 +117,7 @@ namespace Tgrc.Messages
 				bookkeeping.Add(p);
 			}
 		}
-		
+
 		public void RegisterListener(IEnumerable<IListener> listeners, IEnumerable<IPayloadComponentId> payloads)
 		{
 			foreach (var l in listeners)
@@ -302,7 +307,7 @@ namespace Tgrc.Messages
 			}
 		}
 
-		
+
 		private class DistributionList : IEnumerable<IListener>
 		{
 			private readonly HashSet<IListener> listeners;
