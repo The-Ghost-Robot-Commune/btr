@@ -13,6 +13,7 @@ namespace Tgrc.Messages
 
 		IDispatcher Dispatcher { get; }
 		IMessageComposer MessageComposer { get; }
+		ISerializer Serializer { get; }
 
 		IPayloadComponentId FindPayloadId(string payloadName);
 

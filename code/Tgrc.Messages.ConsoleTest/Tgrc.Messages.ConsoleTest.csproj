@@ -55,6 +55,7 @@
     <Compile Include="PayloadB.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WriterListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

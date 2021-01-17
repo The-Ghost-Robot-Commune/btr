@@ -12,15 +12,36 @@ namespace Tgrc.Messages.ConsoleTest
 		static void Main(string[] args)
 		{
 
-			SameProcessRemoteCommunicator();
+			SameProcessRemoteCommunicatorTest();
 
 		}
 
-		private static void SameProcessRemoteCommunicator()
+		private static void SameProcessRemoteCommunicatorTest()
 		{
+			IContext contextA = CreateContext("ContextA");
+			IContext contextB = CreateContext("ContextB");
+			
+			SameProcessRemoteCommunicator communicatorA = new SameProcessRemoteCommunicator();
+			SameProcessRemoteCommunicator communicatorB = new SameProcessRemoteCommunicator(communicatorA);
 
+			RemoteDispatcherProxy proxyA = CreateRemoteDispatcher(contextA, communicatorA);
+			RemoteDispatcherProxy proxyB = CreateRemoteDispatcher(contextB, communicatorB);
+
+			PayloadA plA = new PayloadA();
+			PayloadB plB = new PayloadB();
+
+			var message = contextA.MessageComposer.Compose(plA, plB);
+			contextA.Dispatcher.Send(message);
+			contextA.Dispatcher.DispatchMessages();
 		}
 
+		private static RemoteDispatcherProxy CreateRemoteDispatcher(IContext context, SameProcessRemoteCommunicator communicator)
+		{
+			RemoteDispatcherProxy proxy = new RemoteDispatcherProxy(context.Dispatcher, context.Serializer, communicator);
+			WriterListener listener = new WriterListener();
+			context.Dispatcher.RegisterListenerForAll(listener);
+			return proxy;
+		}
 
 		private static void SimpleContextListener()
 		{
