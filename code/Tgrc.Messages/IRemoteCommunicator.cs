@@ -8,7 +8,10 @@ namespace Tgrc.Messages
 {
 	public interface IRemoteCommunicator
 	{
-
+		/// <summary>
+		/// Send data to the remote target
+		/// </summary>
+		/// <param name="data"></param>
 		void Send(byte[] data);
 
 		/// <summary>
