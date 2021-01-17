@@ -1,33 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Tgrc.Messages.PayloadDefinition;
 
 namespace Tgrc.Messages
 {
-	class InternalPayloadDefinition
+	class InternalPayloadDefinition : IPayloadDefinition
 	{
-		private PayloadDefinition baseDefinition;
-
-		public InternalPayloadDefinition(PayloadDefinition baseDefinition, IPayloadComponentId id)
+		public InternalPayloadDefinition(IPayloadDefinition baseDefinition, IPayloadComponentId id)
 		{
-			this.baseDefinition = baseDefinition;
+			this.Name = baseDefinition.Name;
+			this.Type = baseDefinition.Type;
+			this.Serializer = baseDefinition.Serializer;
+			this.Deserializer = baseDefinition.Deserializer;
 			this.Id = id;
 		}
 
-		public string Name { get { return baseDefinition.Name; } }
-		public Type Type { get { return baseDefinition.Type; } }
-
-		public Serialize Serializer { get { return baseDefinition.Serializer; } }
-		public Deserialize Deserializer { get { return baseDefinition.Deserializer; } }
+		public string Name { get; private set; }
+		public Type Type { get; private set; }
+		public Serialize Serializer { get; private set; }
+		public Deserialize Deserializer { get; private set; }
 		public IPayloadComponentId Id { get; private set; }
 
 
 		public override string ToString()
 		{
-			return string.Format("{0} Id {1}", baseDefinition, Id.Id);
+			return string.Format("Name: {0} Type: {1} Id: {2}", Name, Type.FullName, Id.Id);
 		}
 	}
 }

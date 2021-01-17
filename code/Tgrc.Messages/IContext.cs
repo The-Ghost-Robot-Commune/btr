@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tgrc.Messages
 {
@@ -22,11 +19,9 @@ namespace Tgrc.Messages
 		string GetPayloadName(IPayloadComponentId id);
 		Type GetPayloadType(IPayloadComponentId id);
 
-		/// <summary>
-		/// Intended for debugging. Can be slow
-		/// </summary>
-		/// <returns></returns>
+		IPayloadDefinition GetPayloadDefinition(IPayloadComponentId id);
 		IEnumerable<IPayloadComponentId> GetAllPayloadIds();
+		IEnumerable<IPayloadDefinition> GetAllPayloadDefinitions();
 
 
 	}

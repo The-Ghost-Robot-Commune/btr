@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tgrc.Messages
 {
-	public class PayloadDefinition
+	public class PayloadDefinition : IPayloadDefinition
 	{
-		public delegate void Serialize(IPayloadComponent payload, MemoryStream stream);
-		public delegate IPayloadComponent Deserialize(MemoryStream stream);
 
 		public PayloadDefinition(string name, Type type, Serialize serializer, Deserialize deserializer)
 		{

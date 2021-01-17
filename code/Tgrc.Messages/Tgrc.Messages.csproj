@@ -60,6 +60,7 @@
     <Compile Include="IMessage.cs" />
     <Compile Include="IMessageComposer.cs" />
     <Compile Include="InternalPayloadDefinition.cs" />
+    <Compile Include="IPayloadDefinition.cs" />
     <Compile Include="IRemoteCommunicator.cs" />
     <Compile Include="ISerializer.cs" />
     <Compile Include="PayloadComponentIdComparer.cs" />

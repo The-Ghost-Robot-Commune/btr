@@ -96,6 +96,27 @@ namespace Tgrc.Messages
 			return distributionLists[id.Id].Payload.Type;
 		}
 
+		public IPayloadDefinition GetPayloadDefinition(IPayloadComponentId id)
+		{
+			return distributionLists[id.Id].Payload;
+		}
+
+		public IEnumerable<IPayloadComponentId> GetAllPayloadIds()
+		{
+			foreach (var l in distributionLists)
+			{
+				yield return l.Payload.Id;
+			}
+		}
+
+		public IEnumerable<IPayloadDefinition> GetAllPayloadDefinitions()
+		{
+			foreach (var l in distributionLists)
+			{
+				yield return l.Payload;
+			}
+		}
+
 		public void RegisterListener(IListener listener, params IPayloadComponentId[] payloads)
 		{
 			RegisterListener(listener, (IEnumerable<IPayloadComponentId>)payloads);
@@ -242,11 +263,6 @@ namespace Tgrc.Messages
 			ForwardedMessageBuffer.AddRange(messages);
 		}
 
-		public IEnumerable<IPayloadComponentId> GetAllPayloadIds()
-		{
-			return payloadDefinitions.Values.Select(d => d.Id);
-		}
-
 		public IEnumerable<Tuple<IPayloadComponentId, IEnumerable<IListener>>> GetAllListeners()
 		{
 			foreach (var distList in distributionLists)
@@ -363,7 +379,7 @@ namespace Tgrc.Messages
 				payloads = new List<InternalPayloadDefinition>();
 			}
 
-			public IPayloadComponentId RegisterPayloadComponent(PayloadDefinition definition)
+			public IPayloadComponentId RegisterPayloadComponent(IPayloadDefinition definition)
 			{
 				IPayloadComponentId id = new PayloadId(payloads.Count);
 				payloads.Add(new InternalPayloadDefinition(definition, id));

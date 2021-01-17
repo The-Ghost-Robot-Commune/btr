@@ -15,7 +15,7 @@ namespace Tgrc.Messages
 	public interface IContextSetup
 	{
 
-		IPayloadComponentId RegisterPayloadComponent(PayloadDefinition definition);
+		IPayloadComponentId RegisterPayloadComponent(IPayloadDefinition definition);
 
 		IContext EndSetup();
 	}
