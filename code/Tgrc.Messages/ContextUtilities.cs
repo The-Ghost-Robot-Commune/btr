@@ -4,8 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using ZeroFormatter;
-using static Tgrc.Messages.PayloadDefinition;
 
 namespace Tgrc.Messages
 {
