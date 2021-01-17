@@ -9,7 +9,7 @@ namespace Tgrc.Messages
 	/// </summary>
 	public interface IContext
 	{
-		string Id { get; }
+		string Name { get; }
 
 		IDispatcher Dispatcher { get; }
 		IMessageComposer MessageComposer { get; }

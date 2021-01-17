@@ -12,8 +12,40 @@ namespace Tgrc.Messages.ConsoleTest
 		static void Main(string[] args)
 		{
 
+			SameProcessRemoteCommunicator();
+
+		}
+
+		private static void SameProcessRemoteCommunicator()
+		{
+
+		}
+
+
+		private static void SimpleContextListener()
+		{
+			IContext context = CreateContext("TestContext");
+
+			IDispatcher dispatcher = context.Dispatcher;
+			IMessageComposer composer = context.MessageComposer;
+
+			ListenerA listener = new ListenerA();
+
+			dispatcher.RegisterListenerForAll(listener);
+
+
+			PayloadA plA = new PayloadA();
+			PayloadB plB = new PayloadB();
+
+			var message = composer.Compose(plA, plB);
+			dispatcher.Send(message);
+			dispatcher.DispatchMessages();
+		}
+
+		private static IContext CreateContext(string contextName)
+		{
 			ContextFactory factory = new ContextFactory();
-			var contextSetup = factory.Create("TestContext", null);
+			var contextSetup = factory.Create(contextName, null);
 
 			List<IPayloadComponentId> payloadIds = new List<IPayloadComponentId>();
 
@@ -35,25 +67,7 @@ namespace Tgrc.Messages.ConsoleTest
 			var bId = contextSetup.RegisterPayloadComponent(payloadBDefinition);
 			payloadIds.Add(bId);
 			PayloadB.SetId(bId);
-
-
-			IContext context = contextSetup.EndSetup();
-			IDispatcher dispatcher = context.Dispatcher;
-			IMessageComposer composer = context.MessageComposer;
-
-			ListenerA listener = new ListenerA();
-
-			dispatcher.RegisterListener(listener, payloadIds[0], bId);
-
-
-			PayloadA plA = new PayloadA();
-			PayloadB plB = new PayloadB();
-
-			var message = composer.Compose(plA, plB);
-			dispatcher.Send(message);
-			dispatcher.DispatchMessages();
-
-
+			return contextSetup.EndSetup();
 		}
 	}
 }

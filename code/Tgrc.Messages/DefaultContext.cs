@@ -24,8 +24,9 @@ namespace Tgrc.Messages
 		private readonly List<IMessage>[] forwardedMessageBuffer;
 
 
-		private DefaultContext(List<InternalPayloadDefinition> payloads)
+		private DefaultContext(string contextName, List<InternalPayloadDefinition> payloads)
 		{
+			this.Name = contextName;
 			distributionLists = new DistributionList[payloads.Count];
 			var pd = new Dictionary<string, InternalPayloadDefinition>(StringComparer.InvariantCulture);
 			for (int i = 0; i < payloads.Count; i++)
@@ -67,7 +68,7 @@ namespace Tgrc.Messages
 		private List<IMessage> ForwardedMessageBuffer { get { return forwardedMessageBuffer[forwardedMessageBufferIndex]; } }
 
 
-		public string Id { get; private set; }
+		public string Name { get; private set; }
 
 		public IDispatcher Dispatcher { get { return this; } }
 
@@ -293,6 +294,11 @@ namespace Tgrc.Messages
 			ignoreForwardedMessages.UnionWith(listeners);
 		}
 
+		public override string ToString()
+		{
+			return string.Format("Context {0}", Name);
+		}
+
 		private class PayloadId : IPayloadComponentId
 		{
 			public PayloadId(int id)
@@ -372,10 +378,12 @@ namespace Tgrc.Messages
 
 		public class Setup : IContextSetup
 		{
+			private string contextName;
 			private readonly List<InternalPayloadDefinition> payloads;
 
 			public Setup(string contextName, ILogger logger)
 			{
+				this.contextName = contextName;
 				payloads = new List<InternalPayloadDefinition>();
 			}
 
@@ -389,7 +397,7 @@ namespace Tgrc.Messages
 
 			public IContext EndSetup()
 			{
-				return new DefaultContext(payloads);
+				return new DefaultContext(contextName, payloads);
 			}
 		}
 	}
