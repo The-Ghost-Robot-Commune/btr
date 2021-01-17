@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using ZeroFormatter;
 
 namespace Tgrc.Messages.ConsoleTest
 {
@@ -90,5 +92,6 @@ namespace Tgrc.Messages.ConsoleTest
 			PayloadB.SetId(bId);
 			return contextSetup.EndSetup();
 		}
+		
 	}
 }

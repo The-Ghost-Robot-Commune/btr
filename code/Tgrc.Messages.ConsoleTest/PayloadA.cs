@@ -10,7 +10,7 @@ namespace Tgrc.Messages.ConsoleTest
 	[PayloadComponent(nameof(Tgrc.Messages.ConsoleTest.PayloadA))]
 	[PayloadComponent(nameof(Tgrc.Messages.ConsoleTest.PayloadA) + ".Alt")]
 	[ZeroFormattable]
-	class PayloadA : IPayloadComponent
+	public class PayloadA : IPayloadComponent
 	{
 		private static IPayloadComponentId id;
 
@@ -18,7 +18,7 @@ namespace Tgrc.Messages.ConsoleTest
 		public IPayloadComponentId Id { get { return id; } }
 
 		[Index(0)]
-		public string DummyValue { get; set; }
+		public virtual string DummyValue { get; set; }
 
 		public static void SetId(IPayloadComponentId id)
 		{

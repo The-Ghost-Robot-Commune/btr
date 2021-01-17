@@ -8,7 +8,7 @@ using ZeroFormatter;
 namespace Tgrc.Messages.ConsoleTest
 {
 	[ZeroFormattable]
-	class PayloadB : IPayloadComponent
+	public class PayloadB : IPayloadComponent
 	{
 		private static IPayloadComponentId id;
 
