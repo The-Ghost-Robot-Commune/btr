@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MessagePack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -67,7 +68,7 @@ namespace Tgrc.Messages
 			Serialize value;
 			if (!serializeCache.TryGetValue(typeof(TPayload), out value))
 			{
-				value = (p, s) => ZeroFormatterSerializer.Serialize(s, (TPayload)p);
+				value = (p, s) => MessagePackSerializer.Serialize(s, (TPayload)p);
 				serializeCache.Add(typeof(TPayload), value);
 			}
 			return value;
@@ -91,7 +92,7 @@ namespace Tgrc.Messages
 			Deserialize value;
 			if (!deserializeCache.TryGetValue(typeof(TPayload), out value))
 			{
-				value = (s) => ZeroFormatterSerializer.Deserialize<TPayload>(s);
+				value = (s) => MessagePackSerializer.Deserialize<TPayload>(s);
 				deserializeCache.Add(typeof(TPayload), value);
 			}
 			return value;

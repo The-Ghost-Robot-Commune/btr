@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MessagePack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +9,16 @@ namespace Tgrc.Messages.ConsoleTest
 {
 	[PayloadComponent(nameof(Tgrc.Messages.ConsoleTest.PayloadA))]
 	[PayloadComponent(nameof(Tgrc.Messages.ConsoleTest.PayloadA) + ".Alt")]
+	[MessagePackObject]
 	public class PayloadA : IPayloadComponent
 	{
 		private static IPayloadComponentId id;
 
+		[IgnoreMember]
 		public IPayloadComponentId Id { get { return id; } }
 
-		public virtual string DummyValue { get; set; }
+		[Key(0)]
+		public string DummyValue { get; set; }
 
 		public static void SetId(IPayloadComponentId id)
 		{
