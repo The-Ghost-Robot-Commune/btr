@@ -34,6 +34,9 @@ namespace Tgrc.Messages.ConsoleTest
 			var message = contextA.MessageComposer.Compose(plA, plB);
 			contextA.Dispatcher.Send(message);
 			contextA.Dispatcher.DispatchMessages();
+
+			proxyB.ForwardRemoteMessages();
+			contextB.Dispatcher.DispatchMessages();
 		}
 
 		private static RemoteDispatcherProxy CreateRemoteDispatcher(IContext context, SameProcessRemoteCommunicator communicator)
