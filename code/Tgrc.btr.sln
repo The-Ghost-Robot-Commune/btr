@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{9FE82260-2455-46A6-B2F2-ECCE5510DA66}"
 EndProject
@@ -36,6 +36,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Game", "Game", "{5FE0CF7C-51FB-4E52-A638-E6171EC55FE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgrc.UnityEditorUtils", "Unity\Tgrc.UnityEditorUtils\Tgrc.UnityEditorUtils.csproj", "{3EC3E4ED-E8E3-49E9-BAF5-3033F08BC47E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgrc.Thread", "Tgrc.Thread\Tgrc.Thread.csproj", "{F4A8162B-A615-4C57-B626-9EE5C3CA041E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{3EC3E4ED-E8E3-49E9-BAF5-3033F08BC47E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EC3E4ED-E8E3-49E9-BAF5-3033F08BC47E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EC3E4ED-E8E3-49E9-BAF5-3033F08BC47E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4A8162B-A615-4C57-B626-9EE5C3CA041E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4A8162B-A615-4C57-B626-9EE5C3CA041E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4A8162B-A615-4C57-B626-9EE5C3CA041E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4A8162B-A615-4C57-B626-9EE5C3CA041E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,5 +112,9 @@ Global
 		{D01D2126-FC44-4F99-A40A-E0CDF9EE3B41} = {9FE82260-2455-46A6-B2F2-ECCE5510DA66}
 		{5FE0CF7C-51FB-4E52-A638-E6171EC55FE7} = {9FE82260-2455-46A6-B2F2-ECCE5510DA66}
 		{3EC3E4ED-E8E3-49E9-BAF5-3033F08BC47E} = {D01D2126-FC44-4F99-A40A-E0CDF9EE3B41}
+		{F4A8162B-A615-4C57-B626-9EE5C3CA041E} = {B31F5C66-FAF0-4DCF-8D6B-4AD597660470}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {239DD8B1-7A76-45E8-9045-DF32FF157898}
 	EndGlobalSection
 EndGlobal
