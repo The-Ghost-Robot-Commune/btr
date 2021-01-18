@@ -12,6 +12,8 @@ namespace Tgrc.Messages
 	/// </summary>
 	public class RemoteDispatcherProxy : IListener
 	{
+		
+
 		private int messageBufferIndex;
 		private readonly List<IMessage>[] messageBuffer;
 		private volatile bool messageWaiting;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tgrc.Messages
 {
-	public interface IRemoteCommunicator
+	public interface IRemoteCommunicator : IDisposable
 	{
 		/// <summary>
 		/// Send data to the remote target

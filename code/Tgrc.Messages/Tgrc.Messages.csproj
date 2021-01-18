@@ -84,6 +84,7 @@
     <Compile Include="IPayloadDefinition.cs" />
     <Compile Include="IRemoteCommunicator.cs" />
     <Compile Include="ISerializer.cs" />
+    <Compile Include="MemoryMappedCommunicator.cs" />
     <Compile Include="PayloadComponentIdComparer.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="PayloadDefinition.cs" />
