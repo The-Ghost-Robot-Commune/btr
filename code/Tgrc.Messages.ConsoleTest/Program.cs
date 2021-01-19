@@ -23,21 +23,24 @@ namespace Tgrc.Messages.ConsoleTest
 		private static void MemoryMappedTest(string[] args)
 		{
 			bool isClient = args.Length > 0 && args[0] == "client";
+			bool isHost = !isClient;
 
 			string contextName = "Context" + (isClient ? ".Client" : ".Host");
 			IContext context = CreateContext(contextName);
 
 
 			DotNetThreadStarter threadStarter = new DotNetThreadStarter();
-			MemoryMappedCommunicator communicator = new MemoryMappedCommunicator(threadStarter, "Tgrc.Messages.MemoryMap", !isClient);
+			MemoryMappedCommunicator communicator = new MemoryMappedCommunicator(threadStarter, "Tgrc.Messages.MemoryMap", isHost);
 
 			RemoteDispatcherProxy proxy = CreateRemoteDispatcher(context, communicator);
 
 			communicator.StartThreads();
 
-			IMessage message = CreateBasicMessage(context);
-
-			context.Dispatcher.Send(message);
+			if (isHost)
+			{
+				IMessage message = CreateBasicMessage(context);
+				context.Dispatcher.Send(message); 
+			}
 
 			while (true)
 			{
