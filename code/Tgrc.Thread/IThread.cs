@@ -8,6 +8,7 @@ namespace Tgrc.Thread
 {
 	public interface IThread : IDisposable
 	{
+		ThreadStart StartInfo { get; }
 		bool IsRunning { get; }
 
 		void Start();
