@@ -14,6 +14,8 @@ namespace Tgrc.btr
 	{
 		public bool IsHost;
 
+		public string PayloadMessage;
+
 		private RemoteDispatcherProxy proxy;
 		IContext context;
 
@@ -33,10 +35,9 @@ namespace Tgrc.btr
 
 			if (IsHost)
 			{
-				IMessage message = CreateBasicMessage(context);
+				IMessage message = CreateBasicMessage();
 				context.Dispatcher.Send(message);
 			}
-
 
 		}
 
@@ -69,10 +70,10 @@ namespace Tgrc.btr
 			return p;
 		}
 
-		private static IMessage CreateBasicMessage(IContext context)
+		private IMessage CreateBasicMessage()
 		{
 			TestPayload payload = new TestPayload();
-			payload.DummyValue = "ConsoleTest";
+			payload.DummyValue = PayloadMessage;
 
 			return context.MessageComposer.Compose(payload);
 		}

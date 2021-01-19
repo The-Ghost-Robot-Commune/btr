@@ -23,5 +23,10 @@ namespace Tgrc.Messages
 		{
 			staticId = id;
 		}
+
+		public override string ToString()
+		{
+			return DummyValue;
+		}
 	}
 }
