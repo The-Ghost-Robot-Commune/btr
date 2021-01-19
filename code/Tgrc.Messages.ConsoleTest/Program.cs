@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Tgrc.Thread;
 
 namespace Tgrc.Messages.ConsoleTest
 {
@@ -12,9 +13,45 @@ namespace Tgrc.Messages.ConsoleTest
 	{
 		static void Main(string[] args)
 		{
+			MemoryMappedTest(args);
 
-			SameProcessRemoteCommunicatorTest();
 
+			//SameProcessRemoteCommunicatorTest();
+
+		}
+
+		private static void MemoryMappedTest(string[] args)
+		{
+			bool isClient = args.Length > 0 && args[0] == "client";
+
+			string contextName = "Context" + (isClient ? ".Client" : ".Host");
+			IContext context = CreateContext(contextName);
+
+
+			DotNetThreadStarter threadStarter = new DotNetThreadStarter();
+			MemoryMappedCommunicator communicator = new MemoryMappedCommunicator(threadStarter, "Tgrc.Messages.MemoryMap", !isClient);
+
+			RemoteDispatcherProxy proxy = CreateRemoteDispatcher(context, communicator);
+
+			communicator.StartThreads();
+
+			IMessage message = CreateBasicMessage(context);
+
+			context.Dispatcher.Send(message);
+
+			while (true)
+			{
+				context.Dispatcher.DispatchMessages();
+				proxy.ForwardRemoteMessages(); 
+			}
+		}
+
+		private static IMessage CreateBasicMessage(IContext context)
+		{
+			PayloadA plA = new PayloadA();
+			PayloadB plB = new PayloadB();
+
+			return context.MessageComposer.Compose(plA, plB);
 		}
 
 		private static void SameProcessRemoteCommunicatorTest()
@@ -39,7 +76,7 @@ namespace Tgrc.Messages.ConsoleTest
 			contextB.Dispatcher.DispatchMessages();
 		}
 
-		private static RemoteDispatcherProxy CreateRemoteDispatcher(IContext context, SameProcessRemoteCommunicator communicator)
+		private static RemoteDispatcherProxy CreateRemoteDispatcher(IContext context, IRemoteCommunicator communicator)
 		{
 			RemoteDispatcherProxy proxy = new RemoteDispatcherProxy(context.Dispatcher, context.Serializer, communicator);
 			WriterListener listener = new WriterListener();
