@@ -127,9 +127,16 @@ namespace Tgrc.Messages
 				sendCurrentIndex = 0;
 			}
 
-
-			data.Position = 0;
-			data.CopyTo(stream);
+			try
+			{
+				data.Position = 0;
+				data.CopyTo(stream);
+			}
+			catch (Exception e)
+			{
+				// Errors here is most likely because we are trying to send more data than the buffer can hold
+				throw;
+			}
 
 			// Signal to the receiving side that we have added data to the buffer
 			sendSync.Full.Release();
@@ -165,9 +172,16 @@ namespace Tgrc.Messages
 				receiveCurrentIndex = 0;
 			}
 
-			
-			receiverLocalMemory.Position = 0;
-			stream.CopyTo(receiverLocalMemory);
+			try
+			{
+				receiverLocalMemory.Position = 0;
+				stream.CopyTo(receiverLocalMemory);
+			}
+			catch (Exception e)
+			{
+				// Unknown what kind of errors are likely to show up here
+				throw;
+			}
 
 			// Signal that there is one more open space in the buffer
 			receiveSync.Empty.Release();
