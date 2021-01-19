@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tgrc.Messages;
+using UnityEngine;
 
 namespace Tgrc.btr
 {
@@ -11,6 +12,7 @@ namespace Tgrc.btr
 	{
 		public void HandleMessage(IContext sender, IMessage message)
 		{
+
 			StringBuilder s = new StringBuilder();
 			s.AppendLine(string.Format("Sender: {0}", sender));
 			s.AppendLine(string.Format("PayloadCount: {0}", message.PayloadCount));
@@ -23,7 +25,7 @@ namespace Tgrc.btr
 				++index;
 			}
 
-			Console.WriteLine(s.ToString());
+			Debug.Log(s.ToString());
 		}
 	}
 }

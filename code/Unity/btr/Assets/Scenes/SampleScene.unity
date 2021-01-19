@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948c84c563f37ba4993980487f946e96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsHost: 1
+  IsHost: 0
   PayloadMessage: UnityHost
 --- !u!20 &519420031
 Camera:

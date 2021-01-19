@@ -36,14 +36,19 @@ namespace Tgrc.Messages.ConsoleTest
 
 			communicator.StartThreads();
 
-			if (isHost)
-			{
-				IMessage message = CreateBasicMessage(context);
-				context.Dispatcher.Send(message); 
-			}
+			DateTime lastSend = DateTime.UtcNow;
 
 			while (true)
 			{
+				if ((DateTime.UtcNow - lastSend) > TimeSpan.FromSeconds(1.5))
+				{
+					IMessage message = CreateBasicMessage(context);
+					context.Dispatcher.Send(message);
+
+					lastSend = DateTime.UtcNow;
+				}
+
+
 				context.Dispatcher.DispatchMessages();
 				proxy.ForwardRemoteMessages(); 
 			}

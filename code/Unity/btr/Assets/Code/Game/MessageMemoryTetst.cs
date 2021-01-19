@@ -18,6 +18,7 @@ namespace Tgrc.btr
 
 		private RemoteDispatcherProxy proxy;
 		IContext context;
+		DateTime lastSend;
 
 		void Start()
 		{
@@ -31,14 +32,9 @@ namespace Tgrc.btr
 
 			proxy = CreateRemoteDispatcher(context, communicator);
 
+			lastSend = DateTime.UtcNow;
+
 			communicator.StartThreads();
-
-			if (IsHost)
-			{
-				IMessage message = CreateBasicMessage();
-				context.Dispatcher.Send(message);
-			}
-
 		}
 
 		private static IContext CreateContext(string contextName)
@@ -80,9 +76,18 @@ namespace Tgrc.btr
 
 		void Update()
 		{
+			if ((DateTime.UtcNow - lastSend) > TimeSpan.FromSeconds(2.0))
+			{
+				IMessage message = CreateBasicMessage();
+				context.Dispatcher.Send(message);
+
+				lastSend = DateTime.UtcNow;
+			}
 
 			context.Dispatcher.DispatchMessages();
 			proxy.ForwardRemoteMessages();
+
+			Debug.Log("Update");
 
 		}
 	}
