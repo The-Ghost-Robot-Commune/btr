@@ -84,8 +84,10 @@ namespace Tgrc.btr
 				lastSend = DateTime.UtcNow;
 			}
 
-			context.Dispatcher.DispatchMessages();
 			proxy.ForwardRemoteMessages();
+			context.Dispatcher.DispatchMessages();
+			proxy.SendToRemote();
+			
 
 			Debug.Log("Update");
 

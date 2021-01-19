@@ -19,6 +19,8 @@ namespace Tgrc.Messages
 		private volatile bool messageWaiting;
 		private readonly object messageBufferLock;
 
+		private MemoryStream outgoingStream;
+
 		public RemoteDispatcherProxy(IDispatcher localDispatcher, ISerializer serializer, IRemoteCommunicator remoteCommunicator)
 		{
 			this.LocalDispatcher = localDispatcher;
@@ -34,6 +36,8 @@ namespace Tgrc.Messages
 			messageWaiting = false;
 			messageBufferLock = new object();
 
+			outgoingStream = new MemoryStream();
+
 			LocalDispatcher.RegisterListenerForAll(this);
 			LocalDispatcher.AddToForwardIgnoreList(this);
 			RemoteCommunicator.RegisterReceiver(ReceiveRemoteMessage);
@@ -48,9 +52,15 @@ namespace Tgrc.Messages
 		public void HandleMessage(IContext sender, IMessage message)
 		{
 			// All messages are forwarded to the remote dispatcher
-			MemoryStream stream = new MemoryStream();
-			Serializer.Serialize(message, stream);
-			RemoteCommunicator.Send(stream);
+			Serializer.Serialize(message, outgoingStream);
+		}
+
+		public void SendToRemote()
+		{
+			RemoteCommunicator.Send(outgoingStream);
+			
+			// Reset the stream as the content have been read and sent
+			outgoingStream.Position = 0;
 		}
 
 		/// <summary>

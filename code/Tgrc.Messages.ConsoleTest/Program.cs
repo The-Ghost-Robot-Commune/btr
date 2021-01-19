@@ -42,14 +42,18 @@ namespace Tgrc.Messages.ConsoleTest
 			{
 				if ((DateTime.UtcNow - lastSend) > TimeSpan.FromSeconds(1.5))
 				{
-					IMessage message = CreateBasicMessage(context);
-					context.Dispatcher.Send(message);
+					for (int i = 0; i < 500; i++)
+					{
+						IMessage message = CreateBasicMessage(context);
+						context.Dispatcher.Send(message); 
+					}
 
 					lastSend = DateTime.UtcNow;
 				}
 
 
 				context.Dispatcher.DispatchMessages();
+				proxy.SendToRemote();
 				proxy.ForwardRemoteMessages(); 
 			}
 		}
@@ -87,8 +91,8 @@ namespace Tgrc.Messages.ConsoleTest
 		private static RemoteDispatcherProxy CreateRemoteDispatcher(IContext context, IRemoteCommunicator communicator)
 		{
 			RemoteDispatcherProxy proxy = new RemoteDispatcherProxy(context.Dispatcher, context.Serializer, communicator);
-			WriterListener listener = new WriterListener();
-			context.Dispatcher.RegisterListenerForAll(listener);
+			//WriterListener listener = new WriterListener();
+			//context.Dispatcher.RegisterListenerForAll(listener);
 			return proxy;
 		}
 
