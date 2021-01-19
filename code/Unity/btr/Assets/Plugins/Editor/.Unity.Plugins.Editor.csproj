@@ -350,6 +350,26 @@
     <Compile Include="Unity.Plugins.EditorProperties~\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Tgrc.Log\Tgrc.Log.csproj">
+      <Project>{618c49b1-b1fb-4f90-83a2-584ab7f54616}</Project>
+      <Name>Tgrc.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Tgrc.Messages\Tgrc.Messages.csproj">
+      <Project>{a7995885-0c4f-4848-a285-a883d5050fa9}</Project>
+      <Name>Tgrc.Messages</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Tgrc.Plugins\Tgrc.Plugins.csproj">
+      <Project>{c41c780c-2c47-48f2-9350-60a4abbeddaa}</Project>
+      <Name>Tgrc.Plugins</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Tgrc.Thread\Tgrc.Thread.csproj">
+      <Project>{f4a8162b-a615-4c57-b626-9ee5c3ca041e}</Project>
+      <Name>Tgrc.Thread</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Tgrc.UnityEditorUtils\Tgrc.UnityEditorUtils.csproj">
+      <Project>{3ec3e4ed-e8e3-49e9-baf5-3033f08bc47e}</Project>
+      <Name>Tgrc.UnityEditorUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Code\.Unity.Plugins.csproj">
       <Project>{c2b63361-2f86-4a1d-b155-cd0009452f3f}</Project>
       <Name>.Unity.Plugins</Name>
