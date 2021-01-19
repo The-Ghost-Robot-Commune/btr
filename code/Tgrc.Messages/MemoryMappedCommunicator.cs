@@ -116,6 +116,8 @@ namespace Tgrc.Messages
 		{
 			// TODO Verify that the specified data fits in the buffer
 
+			// If we are not using a timeout we get the side effect that both the "host" and "client" will suspend 
+			// and wait if the other one, for some reason, can't keep up. The drawback to this is that if one side crashes/hangs the other will freeze.
 			sendSync.Empty.WaitOne();
 
 			// Get the current buffer/stream that we should write to

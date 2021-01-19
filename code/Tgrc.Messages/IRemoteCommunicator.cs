@@ -10,7 +10,7 @@ namespace Tgrc.Messages
 	public interface IRemoteCommunicator : IDisposable
 	{
 		/// <summary>
-		/// Send data to the remote target
+		/// Send data to the remote target. This method will block if the send buffers are full
 		/// </summary>
 		/// <param name="data"></param>
 		void Send(MemoryStream data);
