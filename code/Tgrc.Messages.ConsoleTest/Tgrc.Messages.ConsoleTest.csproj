@@ -91,6 +91,10 @@
       <Project>{a7995885-0c4f-4848-a285-a883d5050fa9}</Project>
       <Name>Tgrc.Messages</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tgrc.Thread\Tgrc.Thread.csproj">
+      <Project>{f4a8162b-a615-4c57-b626-9ee5c3ca041e}</Project>
+      <Name>Tgrc.Thread</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

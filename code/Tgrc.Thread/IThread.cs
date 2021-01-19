@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Tgrc.Thread
 {
-	public interface IThreadStarter
+	public interface IThread : IDisposable
 	{
-		IThread CreateThread(ThreadStart startInfo);
+		bool IsRunning { get; }
+
+		void Start();
+
+		void Terminate();
 	}
 }

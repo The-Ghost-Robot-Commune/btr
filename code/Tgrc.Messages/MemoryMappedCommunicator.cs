@@ -1,36 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Tgrc.Thread;
 
 namespace Tgrc.Messages
 {
 	public class MemoryMappedCommunicator : IRemoteCommunicator
 	{
 		/// <summary>
-		/// The total amount of bytes to allocate for the memory mapping. Will be evenly split between the different buffers
+		/// The total amount of bytes to allocate per buffer.
 		/// </summary>
-		public static readonly long MemoryCapacity = 4 * 1024 * 1024;
+		public static readonly int MemoryCapacity = 4 * 1024 * 1024;
 		private const int StreamBufferCount = 2;
+		private const int ReceiveTimeoutMs = 500;
+		private const int PayloadSizeByteCount = 4;
 
 		private bool disposedValue;
+		private volatile bool run;
+		private volatile bool receiverThreadDone;
 
 		private readonly MemoryMappedFile sendFile;
 		private readonly MemoryMappedViewStream[] sendStreams;
 		private int sendCurrentIndex;
 
+		private readonly IThread receiverThread;
 		private readonly MemoryMappedFile receiveFile;
 		private readonly MemoryMappedViewStream[] receiveStreams;
 		private int receiveCurrentIndex;
 		private int totalReceiveCount;
+		private readonly byte[] receiverPayloadSizeBuffer;
+		private readonly MemoryStream receiverLocalMemory;
 
 		private readonly Sync sendSync;
 		private readonly Sync receiveSync;
 
-		public MemoryMappedCommunicator(string mappingBaseName, bool isHost)
+		private readonly List<Action<MemoryStream>> receiverDelegates;
+
+		public MemoryMappedCommunicator(IThreadStarter threadStarter, string mappingBaseName, bool isHost)
 		{
 			this.MappingBaseName = mappingBaseName;
 			this.IsHost = isHost;
@@ -42,13 +54,17 @@ namespace Tgrc.Messages
 				MappingNameSend = MappingNameReceive;
 				MappingNameReceive = temp;
 			}
+			disposedValue = false;
+			run = true;
+			receiverThreadDone = false;
 
-			sendFile = MemoryMappedFile.CreateOrOpen(MappingNameSend, MemoryCapacity, MemoryMappedFileAccess.ReadWrite);
-			receiveFile = MemoryMappedFile.CreateOrOpen(MappingNameReceive, MemoryCapacity, MemoryMappedFileAccess.ReadWrite);
+			long totalMappedMemory = MemoryCapacity * StreamBufferCount;
+			sendFile = MemoryMappedFile.CreateOrOpen(MappingNameSend, totalMappedMemory, MemoryMappedFileAccess.ReadWrite);
+			receiveFile = MemoryMappedFile.CreateOrOpen(MappingNameReceive, totalMappedMemory, MemoryMappedFileAccess.ReadWrite);
 			sendStreams = new MemoryMappedViewStream[StreamBufferCount];
 			receiveStreams = new MemoryMappedViewStream[StreamBufferCount];
 
-			long memoryPerBuffer = MemoryCapacity / StreamBufferCount;
+			long memoryPerBuffer = MemoryCapacity;
 			for (int i = 0; i < StreamBufferCount; i++)
 			{
 				sendStreams[i] = sendFile.CreateViewStream(i * memoryPerBuffer, memoryPerBuffer, MemoryMappedFileAccess.ReadWrite);
@@ -59,8 +75,17 @@ namespace Tgrc.Messages
 			TotalSendCount = 0;
 			totalReceiveCount = 0;
 
+			receiverLocalMemory = new MemoryStream(new byte[MemoryCapacity], 0, MemoryCapacity, true, true);
+			receiverPayloadSizeBuffer = BitConverter.GetBytes(PayloadSizeByteCount);
+			Debug.Assert(receiverPayloadSizeBuffer.Length == PayloadSizeByteCount);
+
 			sendSync = new Sync(MappingNameSend);
 			receiveSync = new Sync(MappingNameReceive);
+
+			receiverDelegates = new List<Action<MemoryStream>>();
+
+			Thread.ThreadStart startInfo = new Thread.ThreadStart(ReceiveThread, this);
+			receiverThread = threadStarter.CreateThread(startInfo);
 		}
 
 		public bool IsHost { get; private set; }
@@ -71,18 +96,31 @@ namespace Tgrc.Messages
 
 		public int TotalSendCount { get; private set; }
 		public int TotalReceiveCount { get { return totalReceiveCount; } }
+		public bool ReceiverThreadRunning { get { return receiverThread.IsRunning; } }
 
-		public void RegisterReceiver(Action<byte[]> receiver)
+		public void StartThreads()
 		{
-			
+			receiverThread.Start();
 		}
 
-		public void Send(byte[] data)
+		public void RegisterReceiver(Action<MemoryStream> receiver)
 		{
+			if (ReceiverThreadRunning)
+			{
+				throw new InvalidOperationException("Can't register receivers after the thread have been started.");
+			}
+			receiverDelegates.Add(receiver);
+		}
+
+		public void Send(MemoryStream data)
+		{
+			// TODO Verify that the specified data fits in the buffer
+
 			sendSync.Empty.WaitOne();
 
 			// Get the current buffer/stream that we should write to
 			var stream = sendStreams[sendCurrentIndex];
+			stream.Position = 0;
 			// Adjust the buffer index for the next use
 			++sendCurrentIndex;
 			if (sendCurrentIndex >= StreamBufferCount)
@@ -90,29 +128,68 @@ namespace Tgrc.Messages
 				sendCurrentIndex = 0;
 			}
 
-			stream.Write(data, 0, data.Length);
+			var payloadSize = BitConverter.GetBytes(data.Length);
+			stream.Write(payloadSize, 0, payloadSize.Length);
+			data.Position = 0;
+			data.CopyTo(stream);
 
 			// Signal to the receiving side that we have added data to the buffer
 			sendSync.Full.Release();
-
-
 			++TotalSendCount;
+		}
+
+		private static void ReceiveThread(object parameter)
+		{
+			MemoryMappedCommunicator _this = (MemoryMappedCommunicator)parameter;
+			while (_this.run)
+			{
+				_this.Receive();
+			}
+
+			_this.receiverThreadDone = true;
 		}
 
 		private void Receive()
 		{
 			// Wait for some content in the buffer
-			receiveSync.Full.WaitOne();
+			if (!receiveSync.Full.WaitOne(ReceiveTimeoutMs))
+			{
+				// Timeout reached. Return so we can check if we should shutdown
+				return;
+			}
 
+			var stream = receiveStreams[receiveCurrentIndex];
+			stream.Position = 0;
+			// Adjust the buffer index for the next use
+			++receiveCurrentIndex;
+			if (receiveCurrentIndex >= StreamBufferCount)
+			{
+				receiveCurrentIndex = 0;
+			}
 
+			stream.Read(receiverPayloadSizeBuffer, 0, receiverPayloadSizeBuffer.Length);
+			int payloadSize = BitConverter.ToInt32(receiverPayloadSizeBuffer, 0);
+
+			receiverLocalMemory.Position = 0;
+			stream.CopyTo(receiverLocalMemory);
 
 			// Signal that there is one more open space in the buffer
 			receiveSync.Empty.Release();
-
-
 			Interlocked.Increment(ref totalReceiveCount);
-		}
 
+			foreach (var r in receiverDelegates)
+			{
+				try
+				{
+					receiverLocalMemory.Position = 0;
+					r(receiverLocalMemory);
+				}
+				catch (Exception e)
+				{
+					// TODO handle this
+				}
+			}
+		}
 
 		protected virtual void Dispose(bool disposing)
 		{
@@ -120,8 +197,27 @@ namespace Tgrc.Messages
 			{
 				if (disposing)
 				{
-					sendStreams[1].Dispose();
-					sendStreams[0].Dispose();
+					// Signal to the receiver thread that we are about to shut down
+					run = false;
+
+					// Wait on the receiver thread to terminate. 
+					while (!receiverThreadDone)
+					{
+						// This is an intentional lock of the current thread 
+					}
+
+					// All threads have terminated at this point, it is now safe to dispose of all synchronization primitives
+					receiveSync.Dispose();
+					sendSync.Dispose();
+
+					receiverLocalMemory.Dispose();
+
+					for (int i = StreamBufferCount - 1; i >= 0; i--)
+					{
+						receiveStreams[i].Dispose();
+						sendStreams[i].Dispose();
+					}
+					receiveFile.Dispose();
 					sendFile.Dispose();
 				}
 
@@ -136,19 +232,22 @@ namespace Tgrc.Messages
 			GC.SuppressFinalize(this);
 		}
 
-		private struct Sync
+		private struct Sync : IDisposable
 		{
 			public readonly Semaphore Full;
 			public readonly Semaphore Empty;
-			//public readonly Mutex Mutex;
 
 			public Sync(string baseName)
 			{
 				this.Full = new Semaphore(0, StreamBufferCount, baseName + ".Full");
 				this.Empty = new Semaphore(StreamBufferCount, StreamBufferCount, baseName + ".Empty");
-				//this.Mutex = new Mutex(false, baseName + ".Mutex");
 			}
 
+			public void Dispose()
+			{
+				Empty.Dispose();
+				Full.Dispose();
+			}
 		}
 	}
 }

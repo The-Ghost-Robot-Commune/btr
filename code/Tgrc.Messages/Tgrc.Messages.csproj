@@ -104,6 +104,10 @@
       <Project>{618c49b1-b1fb-4f90-83a2-584ab7f54616}</Project>
       <Name>Tgrc.Log</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tgrc.Thread\Tgrc.Thread.csproj">
+      <Project>{f4a8162b-a615-4c57-b626-9ee5c3ca041e}</Project>
+      <Name>Tgrc.Thread</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="ProxyMessagesOverview.txt" />

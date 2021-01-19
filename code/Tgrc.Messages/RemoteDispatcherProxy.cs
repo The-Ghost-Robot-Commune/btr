@@ -50,7 +50,7 @@ namespace Tgrc.Messages
 			// All messages are forwarded to the remote dispatcher
 			MemoryStream stream = new MemoryStream();
 			Serializer.Serialize(message, stream);
-			RemoteCommunicator.Send(stream.ToArray());
+			RemoteCommunicator.Send(stream);
 		}
 
 		/// <summary>
@@ -74,9 +74,8 @@ namespace Tgrc.Messages
 			}
 		}
 
-		private void ReceiveRemoteMessage(byte[] data)
+		private void ReceiveRemoteMessage(MemoryStream stream)
 		{
-			MemoryStream stream = new MemoryStream(data);
 			IMessage message = Serializer.Deserialize(stream);
 
 			lock (messageBufferLock)
