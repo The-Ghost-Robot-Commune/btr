@@ -19,7 +19,7 @@ namespace Tgrc.Messages
 		public static readonly int MemoryCapacity = 4 * 1024 * 1024;
 		private const int StreamBufferCount = 2;
 		private const int ReceiveTimeoutMs = 500;
-		private const int PayloadSizeByteCount = 4;
+		private const int PayloadSizeByteCount = 8;
 
 		private bool disposedValue;
 		private volatile bool run;
@@ -76,7 +76,7 @@ namespace Tgrc.Messages
 			totalReceiveCount = 0;
 
 			receiverLocalMemory = new MemoryStream(new byte[MemoryCapacity], 0, MemoryCapacity, true, true);
-			receiverPayloadSizeBuffer = BitConverter.GetBytes(PayloadSizeByteCount);
+			receiverPayloadSizeBuffer = BitConverter.GetBytes(receiverLocalMemory.Length);
 			Debug.Assert(receiverPayloadSizeBuffer.Length == PayloadSizeByteCount);
 
 			sendSync = new Sync(MappingNameSend);
@@ -129,6 +129,7 @@ namespace Tgrc.Messages
 			}
 
 			var payloadSize = BitConverter.GetBytes(data.Length);
+			Debug.Assert(payloadSize.Length == PayloadSizeByteCount);
 			stream.Write(payloadSize, 0, payloadSize.Length);
 			data.Position = 0;
 			data.CopyTo(stream);
