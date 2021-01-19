@@ -119,8 +119,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Unity\btr\Assets\Plugins\Code\$(TargetFileName)"
-copy "$(TargetDir)MessagePack.dll" "$(SolutionDir)Unity\btr\Assets\Plugins\Code\MessagePack.dll"
-copy "$(TargetDir)MessagePack.Annotations.dll" "$(SolutionDir)Unity\btr\Assets\Plugins\Code\MessagePack.Annotations.dll"</PostBuildEvent>
+copy "$(TargetDir)*.dll" "$(SolutionDir)Unity\btr\Assets\Plugins\Code\*.dll"
+
+rem needs to explicitly remove this one
+del "$(SolutionDir)Unity\btr\Assets\Plugins\Code\System.Net.Http.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
