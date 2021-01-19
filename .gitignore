@@ -40,7 +40,7 @@ code/Unity/**/debug.log
 # Unity auto generated proejct files
 code/Unity/**/Assembly-CSharp*.csproj
 
-# Ignore our own built files as they will constantly change
-code/Unity/**/Tgrc.**.dll
-code/Unity/**/Tgrc.**.dll.meta
+# Ignore all build results as they might constantly change
+code/Unity/**/*.dll
+code/Unity/**/*.dll.meta
 
