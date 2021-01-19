@@ -97,6 +97,7 @@
     <Compile Include="ReceiveMessageDelegate.cs" />
     <Compile Include="RemoteDispatcherProxy.cs" />
     <Compile Include="SameProcessRemoteCommunicator.cs" />
+    <Compile Include="TestPayload.cs" />
     <Compile Include="ZeroFormatterImpl.cs" />
   </ItemGroup>
   <ItemGroup>

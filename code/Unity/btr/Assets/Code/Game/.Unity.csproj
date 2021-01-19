@@ -303,7 +303,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GamePlaceholder.cs" />
+    <Compile Include="MessageMemoryTetst.cs" />
     <Compile Include="UnityProperties~\AssemblyInfo.cs" />
+    <Compile Include="UnityWriterListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Tgrc.btr.Core\Tgrc.btr.Core.csproj">

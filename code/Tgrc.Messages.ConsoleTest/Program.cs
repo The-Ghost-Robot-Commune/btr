@@ -51,10 +51,10 @@ namespace Tgrc.Messages.ConsoleTest
 
 		private static IMessage CreateBasicMessage(IContext context)
 		{
-			PayloadA plA = new PayloadA();
-			PayloadB plB = new PayloadB();
+			TestPayload payload = new TestPayload();
+			payload.DummyValue = "ConsoleTest";
 
-			return context.MessageComposer.Compose(plA, plB);
+			return context.MessageComposer.Compose(payload);
 		}
 
 		private static void SameProcessRemoteCommunicatorTest()
@@ -114,25 +114,18 @@ namespace Tgrc.Messages.ConsoleTest
 
 			List<IPayloadComponentId> payloadIds = new List<IPayloadComponentId>();
 
-			Assembly currentAssembly = Assembly.GetExecutingAssembly();
+			Assembly currentAssembly = Assembly.GetAssembly(typeof(TestPayload));
 			var payloads = ContextUtilities.FindPayloadComponents(currentAssembly);
 			foreach (var payload in payloads)
 			{
 				var id = contextSetup.RegisterPayloadComponent(payload);
 				payloadIds.Add(id);
-
-				if (payload.Name == nameof(PayloadA))
-				{
-					PayloadA.SetId(id);
-				}
 			}
 
 
-			PayloadDefinition payloadBDefinition = new PayloadDefinition(nameof(PayloadB), typeof(PayloadB), ContextUtilities.FindSerializeMethod<PayloadB>(), ContextUtilities.FindDeserializeMethod<PayloadB>());
-			var bId = contextSetup.RegisterPayloadComponent(payloadBDefinition);
-			payloadIds.Add(bId);
-			PayloadB.SetId(bId);
-			return contextSetup.EndSetup();
+			IContext context = contextSetup.EndSetup();
+			TestPayload.SetId(context.FindPayloadId(nameof(TestPayload)));
+			return context;
 		}
 		
 	}
