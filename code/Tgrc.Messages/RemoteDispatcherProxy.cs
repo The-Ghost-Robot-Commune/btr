@@ -19,7 +19,7 @@ namespace Tgrc.Messages
 		private volatile bool messageWaiting;
 		private readonly object messageBufferLock;
 
-		private MemoryStream outgoingStream;
+		private readonly MemoryStream outgoingStream;
 
 		public RemoteDispatcherProxy(IDispatcher localDispatcher, ISerializer serializer, IRemoteCommunicator remoteCommunicator)
 		{
@@ -48,6 +48,7 @@ namespace Tgrc.Messages
 		public ISerializer Serializer { get; private set; }
 
 		public IRemoteCommunicator RemoteCommunicator { get; private set; }
+		public bool HaveUnsentMessages { get { return outgoingStream.Length > 0; } }
 
 		public void HandleMessage(IContext sender, IMessage message)
 		{
@@ -57,10 +58,13 @@ namespace Tgrc.Messages
 
 		public void SendToRemote()
 		{
-			RemoteCommunicator.Send(outgoingStream);
-			
-			// Reset the stream as the content have been read and sent
-			outgoingStream.Position = 0;
+			if (HaveUnsentMessages)
+			{
+				RemoteCommunicator.Send(outgoingStream);
+
+				// Reset the stream as the content have been read and sent
+				outgoingStream.Position = 0; 
+			}
 		}
 
 		/// <summary>
