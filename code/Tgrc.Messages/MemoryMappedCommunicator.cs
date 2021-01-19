@@ -19,7 +19,6 @@ namespace Tgrc.Messages
 		public static readonly int MemoryCapacity = 4 * 1024 * 1024;
 		private const int StreamBufferCount = 2;
 		private const int ReceiveTimeoutMs = 500;
-		private const int PayloadSizeByteCount = 8;
 
 		private bool disposedValue;
 		private volatile bool run;
@@ -34,7 +33,6 @@ namespace Tgrc.Messages
 		private readonly MemoryMappedViewStream[] receiveStreams;
 		private int receiveCurrentIndex;
 		private int totalReceiveCount;
-		private readonly byte[] receiverPayloadSizeBuffer;
 		private readonly MemoryStream receiverLocalMemory;
 
 		private readonly Sync sendSync;
@@ -76,8 +74,6 @@ namespace Tgrc.Messages
 			totalReceiveCount = 0;
 
 			receiverLocalMemory = new MemoryStream(new byte[MemoryCapacity], 0, MemoryCapacity, true, true);
-			receiverPayloadSizeBuffer = BitConverter.GetBytes(receiverLocalMemory.Length);
-			Debug.Assert(receiverPayloadSizeBuffer.Length == PayloadSizeByteCount);
 
 			sendSync = new Sync(MappingNameSend);
 			receiveSync = new Sync(MappingNameReceive);
@@ -120,6 +116,7 @@ namespace Tgrc.Messages
 			// and wait if the other one, for some reason, can't keep up. The drawback to this is that if one side crashes/hangs the other will freeze.
 			sendSync.Empty.WaitOne();
 
+			// No mutex lock needed as we use different buffers/views for each batch of data. So no synchronization beyound the semaphores are needed
 			// Get the current buffer/stream that we should write to
 			var stream = sendStreams[sendCurrentIndex];
 			stream.Position = 0;
@@ -130,9 +127,7 @@ namespace Tgrc.Messages
 				sendCurrentIndex = 0;
 			}
 
-			var payloadSize = BitConverter.GetBytes(data.Length);
-			Debug.Assert(payloadSize.Length == PayloadSizeByteCount);
-			stream.Write(payloadSize, 0, payloadSize.Length);
+
 			data.Position = 0;
 			data.CopyTo(stream);
 
@@ -170,9 +165,7 @@ namespace Tgrc.Messages
 				receiveCurrentIndex = 0;
 			}
 
-			stream.Read(receiverPayloadSizeBuffer, 0, receiverPayloadSizeBuffer.Length);
-			int payloadSize = BitConverter.ToInt32(receiverPayloadSizeBuffer, 0);
-
+			
 			receiverLocalMemory.Position = 0;
 			stream.CopyTo(receiverLocalMemory);
 
