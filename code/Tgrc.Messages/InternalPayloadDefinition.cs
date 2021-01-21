@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Security.Cryptography;
+using Tgrc.Messages.Hash;
 
 namespace Tgrc.Messages
 {
-	class InternalPayloadDefinition : IPayloadDefinition
+	class InternalPayloadDefinition : IPayloadDefinition, IHashable
 	{
 		public InternalPayloadDefinition(IPayloadDefinition baseDefinition, IPayloadComponentId id)
 		{
@@ -19,6 +21,21 @@ namespace Tgrc.Messages
 		public Deserialize Deserializer { get; private set; }
 		public IPayloadComponentId Id { get; private set; }
 
+		public void IncrementalHash(HashAlgorithm algorithm)
+		{
+			algorithm.AppendIncrementalValue(Name);
+			algorithm.AppendIncrementalValue(Type);
+			algorithm.AppendIncrementalValue(Id.Id);
+		}
+
+		public byte[] Hash(HashAlgorithm algorithm)
+		{
+			algorithm.Initialize();
+
+			algorithm.AppendIncrementalValue(Name);
+			algorithm.AppendIncrementalValue(Type);
+			return algorithm.AppendIncrementalAndHash(Id.Id);
+		}
 
 		public override string ToString()
 		{
