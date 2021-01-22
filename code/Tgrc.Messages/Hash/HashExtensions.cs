@@ -99,7 +99,7 @@ namespace Tgrc.Messages.Hash
 				algorithm.Append(ExplicitFalse);
 			}
 
-			algorithm.Append((MemberInfo)value, isFinalAppend);
+			algorithm.Append((MemberInfo)value, true, isFinalAppend);
 		}
 
 		public static void Append(this HashAlgorithm algorithm, AssemblyName value, bool isFinalAppend = false)
@@ -110,12 +110,16 @@ namespace Tgrc.Messages.Hash
 
 		public static void Append(this HashAlgorithm algorithm, Attribute value, bool isFinalAppend = false)
 		{
-			algorithm.Append(value.GetType(), isFinalAppend);
+			Type attributeType = value.GetType();
+
+			algorithm.Append(attributeType.FullName);
+			algorithm.Append((MemberInfo)attributeType, false, isFinalAppend);
+			
 		}
 
 		public static void Append(this HashAlgorithm algorithm, PropertyInfo value, bool isFinalAppend = false)
 		{
-			algorithm.Append((MemberInfo)value);
+			algorithm.Append((MemberInfo)value, true);
 			var indexParameters = value.GetIndexParameters();
 			foreach (var i in indexParameters)
 			{
@@ -144,7 +148,7 @@ namespace Tgrc.Messages.Hash
 
 		public static void Append(this HashAlgorithm algorithm, MethodInfo value, bool isFinalAppend = false)
 		{
-			algorithm.Append((MemberInfo)value);
+			algorithm.Append((MemberInfo)value, true);
 			algorithm.Append((int)value.Attributes);
 
 			if (value.IsGenericMethod)
@@ -196,20 +200,27 @@ namespace Tgrc.Messages.Hash
 			algorithm.Append(value.ParameterType, isFinalAppend);
 		}
 
-		public static void Append(this HashAlgorithm algorithm, MemberInfo value, bool isFinalAppend = false)
+		public static void Append(this HashAlgorithm algorithm, MemberInfo value, bool includeAttributes, bool isFinalAppend = false)
 		{
 			algorithm.Append((int)value.MemberType);
-			if (value.DeclaringType != null)
+			if (value.DeclaringType == null)
+			{
+				algorithm.Append(ExplicitNull);
+			}
+			else
 			{
 				algorithm.Append(value.DeclaringType);
 			}
-			int attributeCount = 0;
-			foreach (var a in value.GetCustomAttributes<Attribute>())
+			if (includeAttributes)
 			{
-				algorithm.Append(a);
-				++attributeCount;
+				int attributeCount = 0;
+				foreach (var a in value.GetCustomAttributes<Attribute>())
+				{
+					algorithm.Append(a);
+					++attributeCount;
+				}
+				algorithm.Append(attributeCount); 
 			}
-			algorithm.Append(attributeCount);
 			algorithm.Append(value.Name, isFinalAppend);
 		}
 
