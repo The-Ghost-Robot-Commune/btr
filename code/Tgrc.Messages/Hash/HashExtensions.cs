@@ -114,7 +114,7 @@ namespace Tgrc.Messages.Hash
 
 			algorithm.Append(attributeType.FullName);
 			algorithm.Append((MemberInfo)attributeType, false, isFinalAppend);
-			
+
 		}
 
 		public static void Append(this HashAlgorithm algorithm, PropertyInfo value, bool isFinalAppend = false)
@@ -219,7 +219,7 @@ namespace Tgrc.Messages.Hash
 					algorithm.Append(a);
 					++attributeCount;
 				}
-				algorithm.Append(attributeCount); 
+				algorithm.Append(attributeCount);
 			}
 			algorithm.Append(value.Name, isFinalAppend);
 		}
@@ -234,20 +234,18 @@ namespace Tgrc.Messages.Hash
 		/// <param name="isFinalAppend"></param>
 		public static void Append(this HashAlgorithm algorithm, Delegate value, bool isFinalAppend = false)
 		{
-			if (value.Target == null)
-			{
-				algorithm.Append(ExplicitNull);
-			}
-			else
-			{
-				algorithm.Append(value.Target.GetType());
-			}
-			algorithm.Append(value.Method);
-
 			var invocationList = value.GetInvocationList();
 			foreach (var d in invocationList)
 			{
-				algorithm.Append(d);
+				if (d.Target == null)
+				{
+					algorithm.Append(ExplicitNull);
+				}
+				else
+				{
+					algorithm.Append(d.Target.GetType());
+				}
+				algorithm.Append(d.Method);
 			}
 			algorithm.Append(invocationList.Length, isFinalAppend);
 		}
