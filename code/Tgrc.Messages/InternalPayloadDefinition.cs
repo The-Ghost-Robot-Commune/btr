@@ -23,19 +23,24 @@ namespace Tgrc.Messages
 
 		public void IncrementalHash(HashAlgorithm algorithm)
 		{
-			algorithm.Append(Name);
-			algorithm.Append(Type);
-			algorithm.Append(Id.Id);
+			Hash(algorithm, false);
 		}
 
 		public byte[] Hash(HashAlgorithm algorithm)
 		{
 			algorithm.Initialize();
 
+			Hash(algorithm, true);
+			return algorithm.Hash;
+		}
+
+		private void Hash(HashAlgorithm algorithm, bool isFinalAppend)
+		{
 			algorithm.Append(Name);
 			algorithm.Append(Type);
-			algorithm.Append(Id.Id, true);
-			return algorithm.Hash;
+			algorithm.Append(Serializer);
+			algorithm.Append(Deserializer);
+			algorithm.Append(Id.Id, isFinalAppend);
 		}
 
 		public override string ToString()
