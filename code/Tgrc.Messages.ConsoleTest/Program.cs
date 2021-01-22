@@ -121,6 +121,8 @@ namespace Tgrc.Messages.ConsoleTest
 			ContextFactory factory = new ContextFactory();
 			var contextSetup = factory.Create(contextName, null);
 
+			contextSetup.EnablePayloadDefinitionHash();
+
 			List<IPayloadComponentId> payloadIds = new List<IPayloadComponentId>();
 
 			Assembly currentAssembly = Assembly.GetAssembly(typeof(TestPayload));
@@ -131,8 +133,16 @@ namespace Tgrc.Messages.ConsoleTest
 				payloadIds.Add(id);
 			}
 
-
 			IContext context = contextSetup.EndSetup();
+
+			var hash = contextSetup.GetPayloadDefinitionHash();
+			StringBuilder hashString = new StringBuilder(64);
+			foreach (byte hashByte in hash)
+			{
+				hashString.Append(hashByte.ToString("x2"));
+			}
+			Console.WriteLine("Hash: {0}", hashString.ToString());
+
 			TestPayload.SetId(context.FindPayloadId(nameof(TestPayload)));
 			return context;
 		}

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Tgrc.Log;
+using Tgrc.Messages.Hash;
 
 namespace Tgrc.Messages
 {
@@ -378,26 +380,54 @@ namespace Tgrc.Messages
 
 		public class Setup : IContextSetup
 		{
-			private string contextName;
+			private readonly string contextName;
 			private readonly List<InternalPayloadDefinition> payloads;
+			private HashAlgorithm payloadHashAlgorithm;
 
 			public Setup(string contextName, ILogger logger)
 			{
 				this.contextName = contextName;
+				payloadHashAlgorithm = null;
 				payloads = new List<InternalPayloadDefinition>();
 			}
 
 			public IPayloadComponentId RegisterPayloadComponent(IPayloadDefinition definition)
 			{
 				IPayloadComponentId id = new PayloadId(payloads.Count);
-				payloads.Add(new InternalPayloadDefinition(definition, id));
+				var internalDefinition = new InternalPayloadDefinition(definition, id);
+				if (payloadHashAlgorithm != null)
+				{
+					internalDefinition.IncrementalHash(payloadHashAlgorithm);
+				}
+				payloads.Add(internalDefinition);
 
 				return id;
 			}
 
 			public IContext EndSetup()
 			{
+				// Finish the hashing if it's enabled
+				if (payloadHashAlgorithm != null)
+				{
+					payloadHashAlgorithm.Append(payloads.Count, true);
+				}
+
 				return new DefaultContext(contextName, payloads);
+			}
+
+			public void EnablePayloadDefinitionHash()
+			{
+				if (payloads.Count > 0)
+				{
+					throw new InvalidOperationException("Must enable hashing before any payload is registered.");
+				}
+				this.payloadHashAlgorithm = SHA256.Create("SHA-256");
+			}
+
+			public byte[] GetPayloadDefinitionHash()
+			{
+				byte[] payloadHash = payloadHashAlgorithm.Hash;
+				return payloadHash;
 			}
 		}
 	}

@@ -18,5 +18,12 @@ namespace Tgrc.Messages
 		IPayloadComponentId RegisterPayloadComponent(IPayloadDefinition definition);
 
 		IContext EndSetup();
+
+		/// <summary>
+		/// Enables a hash calculation based on all the payload definitions.
+		/// Must be called before any definitions have been registered.
+		/// </summary>
+		void EnablePayloadDefinitionHash();
+		byte[] GetPayloadDefinitionHash();
 	}
 }
