@@ -41,6 +41,7 @@ namespace Tgrc.btr
 		{
 			ContextFactory factory = new ContextFactory();
 			var contextSetup = factory.Create(contextName, null);
+			contextSetup.EnablePayloadDefinitionHash();
 
 			List<IPayloadComponentId> payloadIds = new List<IPayloadComponentId>();
 
@@ -54,6 +55,14 @@ namespace Tgrc.btr
 
 			IContext c = contextSetup.EndSetup();
 			TestPayload.SetId(c.FindPayloadId(nameof(TestPayload)));
+
+			var hash = contextSetup.GetPayloadDefinitionHash();
+			StringBuilder hashString = new StringBuilder(64);
+			foreach (byte hashByte in hash)
+			{
+				hashString.Append(hashByte.ToString("x2"));
+			}
+			Debug.Log("Hash: " + hashString.ToString());
 
 			return c;
 		}
