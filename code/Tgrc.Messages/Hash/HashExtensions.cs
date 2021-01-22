@@ -8,79 +8,66 @@ namespace Tgrc.Messages.Hash
 	{
 		public static byte[] CalculateHash(this HashAlgorithm algorithm, string value)
 		{
-			var bytes = Encoding.UTF8.GetBytes(value);
 			algorithm.Initialize();
-			return algorithm.ComputeHash(bytes);
+			algorithm.AppendIncrementalValue(value, true);
+			return algorithm.Hash;
 		}
 
 		public static byte[] CalculateHash(this HashAlgorithm algorithm, bool value)
 		{
-			var bytes = BitConverter.GetBytes(value);
 			algorithm.Initialize();
-			return algorithm.ComputeHash(bytes);
+			algorithm.AppendIncrementalValue(value, true);
+			return algorithm.Hash;
 		}
 
 		public static byte[] CalculateHash(this HashAlgorithm algorithm, int value)
 		{
-			var bytes = BitConverter.GetBytes(value);
 			algorithm.Initialize();
-			return algorithm.ComputeHash(bytes);
+			algorithm.AppendIncrementalValue(value, true);
+			return algorithm.Hash;
 		}
 
 		public static byte[] CalculateHash(this HashAlgorithm algorithm, Type value)
 		{
 			algorithm.Initialize();
-			algorithm.AppendIncrementalValue(value.Assembly.FullName);
-			return algorithm.AppendIncrementalAndHash(value.FullName);
+			algorithm.AppendIncrementalValue(value, true);
+			return algorithm.Hash;
 		}
 
-		public static void AppendIncrementalValue(this HashAlgorithm algorithm, string value)
+		public static void AppendIncrementalValue(this HashAlgorithm algorithm, string value, bool isFinalAppend = false)
 		{
 			var bytes = Encoding.UTF8.GetBytes(value);
-			algorithm.TransformBlock(bytes, 0, bytes.Length, bytes, 0);
+			algorithm.Append(bytes, isFinalAppend);
 		}
 
-		public static void AppendIncrementalValue(this HashAlgorithm algorithm, bool value)
+		public static void AppendIncrementalValue(this HashAlgorithm algorithm, bool value, bool isFinalAppend = false)
 		{
 			var bytes = BitConverter.GetBytes(value);
-			algorithm.TransformBlock(bytes, 0, bytes.Length, bytes, 0);
+			algorithm.Append(bytes, isFinalAppend);
 		}
 
-		public static void AppendIncrementalValue(this HashAlgorithm algorithm, int value)
+		public static void AppendIncrementalValue(this HashAlgorithm algorithm, int value, bool isFinalAppend = false)
 		{
 			var bytes = BitConverter.GetBytes(value);
-			algorithm.TransformBlock(bytes, 0, bytes.Length, bytes, 0);
+			algorithm.Append(bytes, isFinalAppend);
 		}
 
-		public static void AppendIncrementalValue(this HashAlgorithm algorithm, Type value)
+		public static void AppendIncrementalValue(this HashAlgorithm algorithm, Type value, bool isFinalAppend = false)
 		{
 			algorithm.AppendIncrementalValue(value.Assembly.FullName);
-			algorithm.AppendIncrementalValue(value.FullName);
+			algorithm.AppendIncrementalValue(value.FullName, isFinalAppend);
 		}
 
-		public static byte[] AppendIncrementalAndHash(this HashAlgorithm algorithm, string value)
+		private static void Append(this HashAlgorithm algorithm, byte[] data, bool isFinalAppend)
 		{
-			var bytes = Encoding.UTF8.GetBytes(value);
-			algorithm.TransformFinalBlock(bytes, 0, bytes.Length);
-			return algorithm.Hash;
-		}
-
-		public static byte[] AppendIncrementalAndHash(this HashAlgorithm algorithm, bool value)
-		{
-			var bytes = BitConverter.GetBytes(value);
-			algorithm.TransformFinalBlock(bytes, 0, bytes.Length);
-			return algorithm.Hash;
-		}
-		public static byte[] AppendIncrementalAndHash(this HashAlgorithm algorithm, int value)
-		{
-			var bytes = BitConverter.GetBytes(value);
-			algorithm.TransformFinalBlock(bytes, 0, bytes.Length);
-			return algorithm.Hash;
-		}
-		public static byte[] AppendIncrementalAndHash(this HashAlgorithm algorithm, Type value)
-		{
-			algorithm.AppendIncrementalValue(value.Assembly.FullName);
-			return algorithm.AppendIncrementalAndHash(value.FullName);
+			if (isFinalAppend)
+			{
+				algorithm.TransformFinalBlock(data, 0, data.Length);
+			}
+			else
+			{
+				algorithm.TransformBlock(data, 0, data.Length, data, 0); 
+			}
 		}
 	}
 }
