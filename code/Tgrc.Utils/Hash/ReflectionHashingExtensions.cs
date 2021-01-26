@@ -14,6 +14,7 @@ namespace Tgrc.Hash
 		private static readonly byte[] ExplicitTrue = BitConverter.GetBytes(true);
 		private static readonly byte[] ExplicitFalse = BitConverter.GetBytes(false);
 
+
 		public static byte[] CalculateHash(this HashAlgorithm algorithm, Type value)
 		{
 			algorithm.Initialize();
@@ -21,25 +22,19 @@ namespace Tgrc.Hash
 			return algorithm.Hash;
 		}
 
+		/// <summary>
+		/// Calculates a hash of the specified type. 
+		/// If two types have the same name, interface, and attributes (not including the values in the attribute), they generate the same hash.
+		/// This does *NOT* mean that they are implemented the same, just that they look the same on the surface.
+		/// </summary>
+		/// <param name="algorithm"></param>
+		/// <param name="value"></param>
+		/// <param name="isFinalAppend"></param>
 		public static void Append(this HashAlgorithm algorithm, Type value, bool isFinalAppend = false)
 		{
-			algorithm.Append((int)value.Attributes);
-			algorithm.Append(value.Assembly.GetName());
-			var fullName = value.FullName;
-			if (fullName == null)
-			{
-				algorithm.Append(ExplicitNull);
-			}
-			else
-			{
-				algorithm.Append(fullName);
-			}
+
 
 			if (value.IsGenericType)
-				algorithm.Append(ExplicitTrue);
-			else
-				algorithm.Append(ExplicitFalse);
-			if (value.IsGenericParameter)
 				algorithm.Append(ExplicitTrue);
 			else
 				algorithm.Append(ExplicitFalse);
@@ -47,10 +42,19 @@ namespace Tgrc.Hash
 				algorithm.Append(ExplicitTrue);
 			else
 				algorithm.Append(ExplicitFalse);
+
+			// TODO Add more explicit type info for generic versions
+			if (value.IsGenericParameter)
+				algorithm.Append(ExplicitTrue);
+			else
+				algorithm.Append(ExplicitFalse);
+
 			if (value.ContainsGenericParameters)
 				algorithm.Append(ExplicitTrue);
 			else
 				algorithm.Append(ExplicitFalse);
+
+
 
 			if (value.IsArray)
 			{
@@ -62,7 +66,16 @@ namespace Tgrc.Hash
 				algorithm.Append(ExplicitFalse);
 			}
 
-			algorithm.Append((MemberInfo)value, true, isFinalAppend);
+
+			int attributeCount = 0;
+			foreach (var a in value.GetCustomAttributes<Attribute>())
+			{
+				algorithm.Append(a);
+				++attributeCount;
+			}
+			
+			algorithm.Append(attributeCount);
+			algorithm.Append(value.Name, isFinalAppend);
 		}
 
 		public static void Append(this HashAlgorithm algorithm, AssemblyName value, bool isFinalAppend = false)
@@ -71,7 +84,7 @@ namespace Tgrc.Hash
 			algorithm.Append(value.Version.ToString(), isFinalAppend);
 		}
 
-		public static void Append(this HashAlgorithm algorithm, Attribute value, bool isFinalAppend = false)
+		private static void Append(this HashAlgorithm algorithm, Attribute value, bool isFinalAppend = false)
 		{
 			Type attributeType = value.GetType();
 
@@ -80,7 +93,7 @@ namespace Tgrc.Hash
 
 		}
 
-		public static void Append(this HashAlgorithm algorithm, PropertyInfo value, bool isFinalAppend = false)
+		private static void Append(this HashAlgorithm algorithm, PropertyInfo value, bool isFinalAppend = false)
 		{
 			algorithm.Append((MemberInfo)value, true);
 			var indexParameters = value.GetIndexParameters();
@@ -109,7 +122,7 @@ namespace Tgrc.Hash
 			algorithm.Append(value.PropertyType, isFinalAppend);
 		}
 
-		public static void Append(this HashAlgorithm algorithm, MethodInfo value, bool isFinalAppend = false)
+		private static void Append(this HashAlgorithm algorithm, MethodInfo value, bool isFinalAppend = false)
 		{
 			algorithm.Append((MemberInfo)value, true);
 			algorithm.Append((int)value.Attributes);
@@ -163,7 +176,7 @@ namespace Tgrc.Hash
 			algorithm.Append(value.ParameterType, isFinalAppend);
 		}
 
-		public static void Append(this HashAlgorithm algorithm, MemberInfo value, bool includeAttributes, bool isFinalAppend = false)
+		private static void Append(this HashAlgorithm algorithm, MemberInfo value, bool isFinalAppend = false)
 		{
 			algorithm.Append((int)value.MemberType);
 			if (value.DeclaringType == null)
@@ -174,16 +187,18 @@ namespace Tgrc.Hash
 			{
 				algorithm.Append(value.DeclaringType);
 			}
-			if (includeAttributes)
+
+			int attributeCount = 0;
+			if (behavior == HashBehavior.IncludeAttributes)
 			{
-				int attributeCount = 0;
 				foreach (var a in value.GetCustomAttributes<Attribute>())
 				{
 					algorithm.Append(a);
 					++attributeCount;
 				}
-				algorithm.Append(attributeCount);
 			}
+			// Always add the attribute count, so we get the same hash for objects with no attributes no matter what the bahevior says
+			algorithm.Append(attributeCount);
 			algorithm.Append(value.Name, isFinalAppend);
 		}
 
