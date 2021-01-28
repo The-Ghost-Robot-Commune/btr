@@ -48,5 +48,16 @@ namespace Tgrc.Utils.Test
 			byte[] rehash1 = reusingHash.CalculateHash(value1);
 			Assert.IsTrue(HashHelpers.IsEqual(hash1, rehash1));
 		}
+
+		[TestMethod]
+		public void DifferentInstancesSameResult()
+		{
+			int value = 5;
+
+			var hash1 = CreateHash().CalculateHash(value);
+			var hash2 = CreateHash().CalculateHash(value);
+
+			Assert.IsTrue(HashHelpers.IsEqual(hash1, hash2));
+		}
 	}
 }
