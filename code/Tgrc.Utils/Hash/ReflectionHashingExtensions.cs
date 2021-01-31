@@ -13,6 +13,14 @@ namespace Tgrc.Hash
 		private static readonly byte[] ExplicitNull = BitConverter.GetBytes(byte.MinValue);
 		private static readonly byte[] ExplicitTrue = BitConverter.GetBytes(true);
 		private static readonly byte[] ExplicitFalse = BitConverter.GetBytes(false);
+		private static readonly byte[] TypePrefix = Encoding.UTF8.GetBytes(nameof(TypePrefix));
+		private static readonly byte[] ClassPrefix = Encoding.UTF8.GetBytes(nameof(ClassPrefix));
+		private static readonly byte[] AssemblyNamePrefix = Encoding.UTF8.GetBytes(nameof(AssemblyNamePrefix));
+		private static readonly byte[] AttributePrefix = Encoding.UTF8.GetBytes(nameof(AttributePrefix));
+		private static readonly byte[] PropertyPrefix = Encoding.UTF8.GetBytes(nameof(PropertyPrefix));
+		private static readonly byte[] MethodPrefix = Encoding.UTF8.GetBytes(nameof(MethodPrefix));
+		private static readonly byte[] ParameterPrefix = Encoding.UTF8.GetBytes(nameof(ParameterPrefix));
+		private static readonly byte[] DelegatePrefix = Encoding.UTF8.GetBytes(nameof(DelegatePrefix));
 
 		private enum AttributeBehavior
 		{
@@ -43,6 +51,7 @@ namespace Tgrc.Hash
 		/// <param name="isFinalAppend"></param>
 		public static void AppendClass(this HashAlgorithm algorithm, Type value, bool isFinalAppend = false)
 		{
+			algorithm.Append(ClassPrefix);
 			var methods = value.GetMethods();
 			foreach (var m in methods)
 			{
@@ -73,6 +82,7 @@ namespace Tgrc.Hash
 
 		private static void Append(this HashAlgorithm algorithm, Type value, AttributeBehavior attributeBehavior, bool isFinalAppend = false)
 		{
+			algorithm.Append(TypePrefix);
 			if (value.IsGenericType)
 				algorithm.Append(ExplicitTrue);
 			else
@@ -109,6 +119,7 @@ namespace Tgrc.Hash
 
 		public static void Append(this HashAlgorithm algorithm, AssemblyName value, bool isFinalAppend = false)
 		{
+			algorithm.Append(AssemblyNamePrefix);
 			algorithm.Append(value.Name);
 			algorithm.Append(value.FullName);
 			algorithm.Append(value.Version.ToString(), isFinalAppend);
@@ -116,6 +127,7 @@ namespace Tgrc.Hash
 
 		private static void Append(this HashAlgorithm algorithm, Attribute value, bool isFinalAppend = false)
 		{
+			algorithm.Append(AttributePrefix);
 			Type attributeType = value.GetType();
 
 			algorithm.Append(attributeType, AttributeBehavior.Exclude, isFinalAppend);
@@ -123,6 +135,7 @@ namespace Tgrc.Hash
 
 		private static void Append(this HashAlgorithm algorithm, PropertyInfo value, bool isFinalAppend = false)
 		{
+			algorithm.Append(PropertyPrefix);
 			algorithm.AppendMemberInfo(value, AttributeBehavior.Include);
 			var indexParameters = value.GetIndexParameters();
 			foreach (var i in indexParameters)
@@ -153,6 +166,7 @@ namespace Tgrc.Hash
 
 		private static void Append(this HashAlgorithm algorithm, MethodInfo value, bool isFinalAppend = false)
 		{
+			algorithm.Append(MethodPrefix);
 			algorithm.AppendMemberInfo(value, AttributeBehavior.Include);
 			algorithm.Append((int)value.Attributes);
 
@@ -192,6 +206,7 @@ namespace Tgrc.Hash
 
 		private static void Append(this HashAlgorithm algorithm, ParameterInfo value, bool isFinalAppend = false)
 		{
+			algorithm.Append(ParameterPrefix);
 			algorithm.Append((int)value.Attributes);
 			algorithm.Append(value.Name);
 			algorithm.Append(value.Position);
@@ -205,7 +220,7 @@ namespace Tgrc.Hash
 			algorithm.AppendType(value.ParameterType, isFinalAppend);
 		}
 
-		
+
 		/// <summary>
 		/// Calculates a hash of a Delegate object. The resulting hash can be used to validate that two different Delegate instanses
 		/// are setup in the same way (meaning they have the same type of targets and in the same order).
@@ -216,6 +231,7 @@ namespace Tgrc.Hash
 		/// <param name="isFinalAppend"></param>
 		public static void Append(this HashAlgorithm algorithm, Delegate value, bool isFinalAppend = false)
 		{
+			algorithm.Append(DelegatePrefix);
 			var invocationList = value.GetInvocationList();
 			foreach (var d in invocationList)
 			{
