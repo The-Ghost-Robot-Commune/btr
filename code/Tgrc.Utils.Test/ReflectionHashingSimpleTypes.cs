@@ -89,6 +89,10 @@ namespace Tgrc.Utils.Test
 			{
 				public int Value { get; set; }
 			}
+			public class PropertyMethod1
+			{
+				public int Value { get; }
+			}
 		}
 
 		class SameNamesDifferentSignaturesB
@@ -104,6 +108,13 @@ namespace Tgrc.Utils.Test
 			public class Property_DifferentType1
 			{
 				public long Value { get; set; }
+			}
+			public class PropertyMethod1
+			{
+				public int Value()
+				{
+					return 0;
+				}
 			}
 		}
 
@@ -128,6 +139,14 @@ namespace Tgrc.Utils.Test
 		{
 			var hash1 = CreateHash().CalculateClassHash(typeof(SameNamesDifferentSignaturesA.Property_DifferentType1));
 			var hash2 = CreateHash().CalculateClassHash(typeof(SameNamesDifferentSignaturesB.Property_DifferentType1));
+
+			Assert.IsFalse(HashHelpers.IsEqual(hash1, hash2));
+		}
+		[TestMethod]
+		public void SameNameDifferentTypesOfMethods()
+		{
+			var hash1 = CreateHash().CalculateClassHash(typeof(SameNamesDifferentSignaturesA.PropertyMethod1));
+			var hash2 = CreateHash().CalculateClassHash(typeof(SameNamesDifferentSignaturesB.PropertyMethod1));
 
 			Assert.IsFalse(HashHelpers.IsEqual(hash1, hash2));
 		}
