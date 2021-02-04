@@ -1,19 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{02396C76-C842-4FEB-867F-4DDEC4A6DDB3}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tgrc.btr</RootNamespace>
-    <AssemblyName>Tgrc.btr.Core</AssemblyName>
+    <ProjectGuid>{721830FA-C7FF-40CB-B87B-22B5473AA9BD}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Tgrc.btr.BackendRunner</RootNamespace>
+    <AssemblyName>Tgrc.btr.BackendRunner</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,31 +43,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tgrc.btr.Backend\Tgrc.btr.Backend.csproj">
+      <Project>{d091255b-f2a8-4b85-a7bd-0a748342cfad}</Project>
+      <Name>Tgrc.btr.Backend</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tgrc.btr.Core\Tgrc.btr.Core.csproj">
+      <Project>{02396c76-c842-4feb-867f-4ddec4a6ddb3}</Project>
+      <Name>Tgrc.btr.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tgrc.Log\Tgrc.Log.csproj">
+      <Project>{618c49b1-b1fb-4f90-83a2-584ab7f54616}</Project>
+      <Name>Tgrc.Log</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tgrc.Messages\Tgrc.Messages.csproj">
       <Project>{a7995885-0c4f-4848-a285-a883d5050fa9}</Project>
       <Name>Tgrc.Messages</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Configuration\" />
-    <Folder Include="RemoteCommunication\" />
+    <ProjectReference Include="..\Tgrc.Plugins\Tgrc.Plugins.csproj">
+      <Project>{c41c780c-2c47-48f2-9350-60a4abbeddaa}</Project>
+      <Name>Tgrc.Plugins</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tgrc.Thread\Tgrc.Thread.csproj">
+      <Project>{f4a8162b-a615-4c57-b626-9ee5c3ca041e}</Project>
+      <Name>Tgrc.Thread</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tgrc.Utils\Tgrc.Utils.csproj">
+      <Project>{fe14c06a-e7b5-4207-8c9c-8a174817efe4}</Project>
+      <Name>Tgrc.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Unity\btr\Assets\Plugins\Code\$(TargetFileName)"
-copy "$(TargetDir)*.dll" "$(SolutionDir)Unity\btr\Assets\Plugins\Code\*.dll"
-
-rem needs to explicitly remove this one
-del "$(SolutionDir)Unity\btr\Assets\Plugins\Code\System.Net.Http.dll"</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

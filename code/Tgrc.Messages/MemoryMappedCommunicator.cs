@@ -13,6 +13,9 @@ namespace Tgrc.Messages
 {
 	public class MemoryMappedCommunicator : IRemoteCommunicator
 	{
+
+		// TODO Move these constants to a configuration file, specified in the constructor
+
 		/// <summary>
 		/// The total amount of bytes to allocate per buffer.
 		/// </summary>
