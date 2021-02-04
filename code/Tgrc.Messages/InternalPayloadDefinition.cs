@@ -38,8 +38,9 @@ namespace Tgrc.Messages
 		{
 			algorithm.Append(Name);
 			algorithm.AppendType(Type);
-			algorithm.Append(Serializer);
-			algorithm.Append(Deserializer);
+			// TODO Find a way to include the serializer and deserializer in the identity hash
+			//algorithm.Append(Serializer);
+			//algorithm.Append(Deserializer);
 			algorithm.Append(Id.Id, isFinalAppend);
 		}
 
