@@ -73,7 +73,6 @@
     <Compile Include="ContextSetupException.cs" />
     <Compile Include="ContextUtilities.cs" />
     <Compile Include="DefaultContext.cs" />
-    <Compile Include="Hash\HashExtensions.cs" />
     <Compile Include="IContext.cs" />
     <Compile Include="IContextSetup.cs" />
     <Compile Include="IDispatcher.cs" />

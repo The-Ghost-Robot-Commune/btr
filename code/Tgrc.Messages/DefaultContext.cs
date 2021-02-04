@@ -7,8 +7,8 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Tgrc.Hash;
 using Tgrc.Log;
-using Tgrc.Messages.Hash;
 
 namespace Tgrc.Messages
 {

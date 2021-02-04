@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
-using Tgrc.Messages.Hash;
+using Tgrc.Hash;
 
 namespace Tgrc.Messages
 {
@@ -37,7 +37,7 @@ namespace Tgrc.Messages
 		private void Hash(HashAlgorithm algorithm, bool isFinalAppend)
 		{
 			algorithm.Append(Name);
-			algorithm.Append(Type);
+			algorithm.AppendType(Type);
 			algorithm.Append(Serializer);
 			algorithm.Append(Deserializer);
 			algorithm.Append(Id.Id, isFinalAppend);
