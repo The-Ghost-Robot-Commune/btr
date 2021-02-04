@@ -7,10 +7,11 @@
     <ProjectGuid>{02396C76-C842-4FEB-867F-4DDEC4A6DDB3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tgrc.btr.Core</RootNamespace>
+    <RootNamespace>Tgrc.btr</RootNamespace>
     <AssemblyName>Tgrc.btr.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +50,13 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Unity\btr\Assets\Plugins\Code\$(TargetFileName)"
+copy "$(TargetDir)*.dll" "$(SolutionDir)Unity\btr\Assets\Plugins\Code\*.dll"
+
+rem needs to explicitly remove this one
+del "$(SolutionDir)Unity\btr\Assets\Plugins\Code\System.Net.Http.dll"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
